@@ -1,28 +1,34 @@
 # front
 
 ## app
-** Instalar **
 
-NPM
-*apt install npm
+### Instalar
 
-EXPO
-*npm install --global expo-cli
+*NPM*
+- apt install npm
 
-** Instalar Dependencias**
-REACT NATIVE 
-*npx expo install react-native-screens react-native-safe-area-context
+*EXPO*
 
-ICONOS
-*npm i @expo/vector-icons
+- npm install --global expo-cli
 
-BUTTON TAB DE CEL
-*npm install @react-navigation/bottom-tabs
+### Instalar Dependencias
 
-** Ejecucion **
+*REACT NATIVE* 
+
+- npx expo install react-native-screens react-native-safe-area-context
+
+*ICONOS*
+
+- npm i @expo/vector-icons
+
+*BUTTON TAB DE CEL*
+
+- npm install @react-navigation/bottom-tabs
+
+### Ejecucion 
 
 En front/app
-* expo start
+- expo start
 
 Usar emulador de celular o la apliccion de expo
 
