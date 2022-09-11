@@ -8,7 +8,6 @@
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/FIFIUBA.png",
-
       "backgroundColor": "#193752"
     },
     "updates": {
@@ -24,7 +23,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.cristian2603.myapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"

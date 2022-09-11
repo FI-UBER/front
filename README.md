@@ -5,7 +5,12 @@
 ### Instalar
 
 *NPM*
+
 - apt install npm
+
+*YARN*
+
+- npm install --global yarn
 
 *EXPO*
 
@@ -28,8 +33,13 @@
 ### Ejecucion 
 
 En front/app
+
+- yarn add expo
+
+- expo doctor -fix-dependencies
+
 - expo start
 
-Usar emulador de celular o la apliccion de expo
+Usar emulador de celular o la apliccion de expo para entrar a la app localmente
 
 - Se requiere tener nodejs instalado
