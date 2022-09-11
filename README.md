@@ -1,26 +1,29 @@
 # front
 
-# app
-**Instalar**
+## app
+** Instalar **
+
 NPM
-apt install npm
+*apt install npm
 
 EXPO
-npm install --global expo-cli
+*npm install --global expo-cli
 
 ** Instalar Dependencias**
 REACT NATIVE 
-npx expo install react-native-screens react-native-safe-area-context
+*npx expo install react-native-screens react-native-safe-area-context
 
 ICONOS
-npm i @expo/vector-icons
+*npm i @expo/vector-icons
 
 BUTTON TAB DE CEL
-npm install @react-navigation/bottom-tabs
+*npm install @react-navigation/bottom-tabs
 
-**Ejecucion**
+** Ejecucion **
 
 En front/app
 * expo start
 
 Usar emulador de celular o la apliccion de expo
+
+- Se requiere tener nodejs instalado
