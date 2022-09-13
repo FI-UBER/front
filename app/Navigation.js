@@ -1,6 +1,8 @@
 import React from 'react';
+import {createRef} from 'react';
 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; 
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 //iconos que no se ven¿?
 import { SimpleLineIcons } from '@expo/vector-icons';
@@ -11,9 +13,36 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Login from './Screen/Login';
 import Register from './Screen/Register';
 import Home from './Screen/Home';
+import Home_Login from './Screen/Home_Login';
+
+const stack = createNativeStackNavigator();
+
+//Stack de arriba
+function Mstack() {
+    return(
+        <stack.Navigator
+            initialRouteName="HomeScreen">
+
+            <stack.Screen
+            name= "HomeScreen Logeado"
+            component={Home_Login}
+            options={{
+                headerShown:false
+            }}>
+            </stack.Screen>
+
+
+            <stack.Screen
+            name= "HomeScreen"
+            component={Home}>
+   
+            </stack.Screen>
+        </stack.Navigator>
+    )
+}
 
 const Tab  = createBottomTabNavigator();
-
+//Navigation de abajo
 function MyTabs() {
     return (
         <Tab.Navigator
@@ -36,7 +65,7 @@ function MyTabs() {
 
             <Tab.Screen
                 name = "Home"
-                component={Home}
+                component={Mstack}
                 options={{
                     tabBarLabel: "Home",
                     tabBarIcon: ({color, size}) => {
@@ -61,7 +90,9 @@ export default function Navigation(){
 
 
     return (
-        <NavigationContainer theme={navTheme}>
+        <NavigationContainer 
+            ref={createRef()} 
+            theme={navTheme}>
             <MyTabs/>
         </NavigationContainer>
         );

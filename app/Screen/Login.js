@@ -1,23 +1,40 @@
-import React from "react";
+import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert, TextInput} from 'react-native';
 import FIFIUBA from '../assets/FIFIUBA.png'
 
 
 
-
 const Login = () => {
-    const [text, UserID] = React.useState(null);
-    const [n, Pass] = React.useState(null);
+    const [utext, UserID] = React.useState(null);
+    const [ptext, Pass] = React.useState(null);
+    const [isDisabled, setDisabled] = useState(false);
+    const Nav = useNavigation();
+
+
+    const handleSubmit = () => {
+      if (utext!=null & ptext!=null){
+        if (utext.length!=0 & ptext.length!=0){
+          console.log('Logeado');
+   //       setDisabled(!isDisabled)
+          Nav.navigate("HomeScreen Logeado")
+        }
+    }
+    }
+
+    
     return(
         <SafeAreaView style={styles.container}>
-            <View>
+          <View>
             <Image source={FIFIUBA} style={{ width: 305, height: 159 }} />
-            </View>
+          </View>
             <TextInput
                 style={styles.input}
                 onChangeText={UserID}
                 placeholder="User"
                 keyboardType="default"
+
             />
             <TextInput
                 style={styles.input}
@@ -25,6 +42,14 @@ const Login = () => {
                 placeholder="Password"
                 keyboardType="default"
             />
+          <View>
+            <Button  
+              type="button" 
+              title="Login"
+              onPress= {handleSubmit} 
+              disabled={isDisabled}>
+              </Button>
+          </View> 
         </SafeAreaView>
     );
     
@@ -44,6 +69,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
       },
+    container: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
 
 export default Login;
