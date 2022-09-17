@@ -36,7 +36,7 @@ En front/app
 
 - yarn add expo
 
-- expo doctor -fix-dependencies
+- expo doctor --fix-dependencies
 
 - expo start
 
