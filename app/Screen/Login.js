@@ -12,10 +12,19 @@ const Login = () => {
     const [isDisabled, setDisabled] = useState(false);
     const Nav = useNavigation();
 
+    const checkEmail = () => {
+      if (emailtext!=null){
+          if (emailtext.includes('@') & emailtext.includes('.com')){
+              return true
+          }
+          console.log('Email invalido. no contiene @ ni .com');
+      }
+      return false
+    }
 
     const handleLogin = () => {
-      if (mtext!=null & ptext!=null){
-        if (mtext.length!=0 & ptext.length!=0){
+      if (ptext!=null){
+        if (checkEmail() & ptext.length!=0){
           body = { mail: mtext, password: ptext } 
           console.log(body);
           console.log('Logeado');

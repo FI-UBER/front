@@ -11,9 +11,10 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 //screens
 import Login from './Screen/Login';
-import Register from './Screen/Register';
+import UserRegister from './Screen/UserRegister';
+import DriverRegister from './Screen/DriverRegister';
 import Home from './Screen/Home';
-import Home_Login from './Screen/Home_Login';
+import HomeLogin from './Screen/HomeLogin';
 
 const stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ function Mstack() {
 
             <stack.Screen
             name= "HomeScreen Logeado"
-            component={Home_Login}
+            component={HomeLogin}
             options={{
                 headerShown:false
             }}>
@@ -59,24 +60,36 @@ function MyTabs() {
                 options={{
                     tabBarLabel: "Login",
                     tabBarIcon: ({color, size}) => {
-                        <MaterialCommunityIcons name="login" size={24} color="black" />                    }
+                        <MaterialCommunityIcons name="login" size={24} color="black" />}
                 }}
-                />
-
+            />
             <Tab.Screen
                 name = "Home"
                 component={Mstack}
                 options={{
                     tabBarLabel: "Home",
                     tabBarIcon: ({color, size}) => {
-                        <SimpleLineIcons name="home" size={24} color="blue" />        
-                    }
+                        <SimpleLineIcons name="home" size={24} color="blue" />}
                 }}
             />
-
-            <Tab.Screen 
-                name = "Register" 
-                component={Register}/>
+            <Tab.Screen
+                name = "User Register"
+                component={UserRegister}
+                options={{
+                    tabBarLabel: "User Register",
+                    tabBarIcon: ({color, size}) => {
+                        <MaterialCommunityIcons name="user register" size={24} color="black" />}
+                }}
+            />
+            <Tab.Screen
+                name = "Driver Register"
+                component={DriverRegister}
+                options={{
+                    tabBarLabel: "Driver Register",
+                    tabBarIcon: ({color, size}) => {
+                        <MaterialCommunityIcons name="driver register" size={24} color="black" />}
+                }}
+            />
         </Tab.Navigator>
     );
 }
@@ -87,7 +100,6 @@ export default function Navigation(){
           background: "#193752"
         }
       };
-
 
     return (
         <NavigationContainer 

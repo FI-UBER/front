@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, 
 import FIFI from '../assets/building.jpg'
 
 
- const Home_Login = () => {
+ const HomeLogin = () => {
     return(
         <SafeAreaView style={styles.container}>
             <View>
@@ -35,5 +35,5 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Home_Login;
+export default HomeLogin;
 

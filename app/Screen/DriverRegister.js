@@ -59,7 +59,7 @@ const handleRegister = () => {
     }
 }
 
-const Register = () => {
+const DriverRegister = () => {
     return(
         <SafeAreaView style={styles.container}>
           <View>
@@ -139,4 +139,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Register;
+export default DriverRegister;
