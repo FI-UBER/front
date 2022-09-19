@@ -7,20 +7,22 @@ import FIFIUBA from '../assets/FIFIUBA.png'
 
 
 const Login = () => {
-    const [utext, UserID] = React.useState(null);
-    const [ptext, Pass] = React.useState(null);
+    const [mtext, Mail] = useState(null);
+    const [ptext, Pass] = useState(null);
     const [isDisabled, setDisabled] = useState(false);
     const Nav = useNavigation();
 
 
-    const handleSubmit = () => {
-      if (utext!=null & ptext!=null){
-        if (utext.length!=0 & ptext.length!=0){
+    const handleLogin = () => {
+      if (mtext!=null & ptext!=null){
+        if (mtext.length!=0 & ptext.length!=0){
+          body = { mail: mtext, password: ptext } 
+          console.log(body);
           console.log('Logeado');
-   //       setDisabled(!isDisabled)
+          //setDisabled(!isDisabled)
           Nav.navigate("HomeScreen Logeado")
         }
-    }
+      }
     }
 
     
@@ -31,22 +33,22 @@ const Login = () => {
           </View>
             <TextInput
                 style={styles.input}
-                onChangeText={UserID}
-                placeholder="User"
+                onChangeText={Mail}
+                placeholder="Your email"
                 keyboardType="default"
 
             />
             <TextInput
                 style={styles.input}
                 onChangeText={Pass}
-                placeholder="Password"
+                placeholder="Your password"
                 keyboardType="default"
             />
           <View>
             <Button  
               type="button" 
-              title="Login"
-              onPress= {handleSubmit} 
+              title="Sign In"
+              onPress= {handleLogin} 
               disabled={isDisabled}>
               </Button>
           </View> 
