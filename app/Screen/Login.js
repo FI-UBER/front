@@ -9,7 +9,6 @@ import FIFIUBA from '../assets/FIFIUBA.png'
 const Login = () => {
     const [utext, UserID] = React.useState(null);
     const [ptext, Pass] = React.useState(null);
-    const [isDisabled, setDisabled] = useState(false);
     const Nav = useNavigation();
 
 
@@ -17,7 +16,6 @@ const Login = () => {
       if (utext!=null & ptext!=null){
         if (utext.length!=0 & ptext.length!=0){
           console.log('Logeado');
-   //       setDisabled(!isDisabled)
           Nav.navigate("HomeScreen Logeado")
         }
     }

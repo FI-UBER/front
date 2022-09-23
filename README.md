@@ -30,6 +30,18 @@
 
 - npm install @react-navigation/bottom-tabs
 
+*MAPS*
+
+- npx expo install react-native-maps
+
+*LOCALIZACION*
+
+- npx expo install expo-location
+
+*DIRECTIONS*
+
+- npm i react-native-maps-directions
+
 ### Ejecucion 
 
 En front/app
