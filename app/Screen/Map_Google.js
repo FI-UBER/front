@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Platform, Text, View, StyleSheet,Dimensions, Alert, Button, TextInput } from 'react-native';
+import { Platform, Text, View, StyleSheet,Dimensions, Alert, Button, TextInput, SafeAreaView } from 'react-native';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 
 export default function Map_Google() {
   //Origen
+  const [origin1, setOrigin1] = React.useState()
   const [origin, setOrigin] = React.useState({
     latitude: 0,
     longitude: 0,
+    name:null,
   });
-
-//Destino
+  
+  const [destiny1, setDestiny1] = React.useState()
   const [destiny, setDestiny] = React.useState({
-    latitude: 0,
-    longitude: 0,
+    //FIUBA
+    latitude: -34.61032599547549,
+    longitude: -58.36988084080446,
+    name:'FIUBA',
+    //Destino,
   });
   const mapRef = React.createRef();
 
@@ -32,7 +38,6 @@ export default function Map_Google() {
     })();
   }, []);
 
-  
 
 //Mostrar/actualizar posicion al presionar boton
   const changeRegion = () =>{
@@ -43,10 +48,11 @@ export default function Map_Google() {
       latitudeDelta: 0.1,
       longitudeDelta: 0.1
     })
+
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <MapView style={styles.map} 
             ref={mapRef}
             //showsUserLocation = {true}
@@ -59,22 +65,27 @@ export default function Map_Google() {
                 longitudeDelta: 0.1,
                 }}
         >
-                <Marker 
-                  title='Origen'
-                  coordinate={origin}
-                >
-                </Marker>
-                <Marker
+              <Marker
+              //Pin en origen 
+                title='Origen'
+                coordinate={origin}
+              >
+              </Marker>
+              <Marker
+                //Pin en destino
                   title='Destino'
                   coordinate={destiny}>
               </Marker>
               
-              {/* <MapViewDirections
+              { <MapViewDirections
               //API KEY Requerido
                 origin={origin}
-                destination={destiny}>
-                apikey={apikey}
-              </MapViewDirections> */}
+                destination={destiny}
+                apikey='AIzaSyARscCcGqdra2Rjz5p8FXvm8GMeMEi6qak'
+                strokeWidht={7}
+                strokeColor= 'black'
+                 >
+            </MapViewDirections> }
 
 
             </MapView>
@@ -86,29 +97,65 @@ export default function Map_Google() {
             </Button>
             { <Text style={styles.paragraph}>Latitud: {origin.latitude}</Text> }
             { <Text style={styles.paragraph}>Longitud: {origin.longitude}</Text> }
-            <TextInput
-            //Origen de viaje
-                style={styles.input}
-                onChangeText={origin}
-                placeholder="Origen"
-                keyboardType="default"
+            <View style={{marginTop: 10}}>
+            { <Text style={styles.paragraph}> ----------------------------------------------------------- Origen------------------------------------------------------------ </Text> }
+              <GooglePlacesAutocomplete
+                placeholder="Type a place"
+                query={{key: 'AIzaSyARscCcGqdra2Rjz5p8FXvm8GMeMEi6qak'}}
+                fetchDetails={true}
+                onPress={(data, details = null) => console.log(data, details)}
+                onFail={error => console.log(error)}
+                onNotFound={() => console.log('no results')}
+                styles={{
+                  container: {
+                    flex: 0,
+                  },
+                  description: {
+                    color: '#000',
+                    fontSize: 16,
+                  },
+                  predefinedPlacesDescription: {
+                    color: '#3caf50',
+                  },
+                }}
+              
+                />
+              </View>
+              <View style={{marginVertical: 10, flex: 1, }}>
+              { <Text style={styles.paragraph}>---------------------------------------------------------- Destino------------------------------------------------------------- </Text> }
+              <GooglePlacesAutocomplete
+                placeholder="Type a place"
+                query={{
+                  key: 'AIzaSyARscCcGqdra2Rjz5p8FXvm8GMeMEi6qak',
+                  language: 'es'}}
+                fetchDetails={true}
+                onPress={(data, details = null) => console.log(data, details)}
+                onFail={error => console.log(error)}
+                onNotFound={() => console.log('no results')}
+                styles={{
+                  container: {
+                    flex: 0,
+                  },
+                  description: {
+                    color: '#000',
+                    fontSize: 16,
 
-            />
-            <TextInput
-            //destino de viaje
-                style={styles.input}
-                onChangeText={destiny}
-                placeholder="Destino"
-                keyboardType="default"
-            />
- </View>
+                  },
+                  predefinedPlacesDescription: {
+                    color: '#3caf50',
+                  },
+                }}
+              
+                />
+              </View>
+ </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'grey',
     alignItems: 'center',
     justifyContent: 'center',
   },
