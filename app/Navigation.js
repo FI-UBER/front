@@ -14,6 +14,8 @@ import Login from './Screen/Login';
 import Register from './Screen/Register';
 import Home from './Screen/Home';
 import Home_Login from './Screen/Home_Login';
+import SearchUser from './Screen/SearchUser'
+import Map_Google from './Screen/Map_Google';
 
 const stack = createNativeStackNavigator();
 
@@ -37,7 +39,19 @@ function Mstack() {
             component={Home}>
    
             </stack.Screen>
-        </stack.Navigator>
+
+            <stack.Screen
+                name = "SearchUser"
+                component = {SearchUser}
+                options = {{title: 'Buscar usuario'}}
+                />
+
+            <stack.Screen
+                name= "Map_Google"
+                component={Map_Google} 
+                options = {{title: 'Realizar viaje'}}/>
+
+            </stack.Navigator>
     )
 }
 

@@ -36,6 +36,7 @@ const Login = () => {
             />
             <TextInput
                 style={styles.input}
+                secureTextEntry = {true}
                 onChangeText={Pass}
                 placeholder="Password"
                 keyboardType="default"
@@ -45,7 +46,8 @@ const Login = () => {
               type="button" 
               title="Login"
               onPress= {handleSubmit} 
-              disabled={isDisabled}>
+              //disabled={isDisabled}
+              >
               </Button>
           </View> 
         </SafeAreaView>
