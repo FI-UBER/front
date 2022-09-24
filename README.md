@@ -42,6 +42,10 @@
 
 - npm i react-native-maps-directions
 
+*AUTOCOMPLETE PLACE*
+
+- npm i react-native-google-places-autocomplete
+
 ### Ejecucion 
 
 En front/app
