@@ -1,9 +1,10 @@
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
-import React, { useState } from 'react';
+import React, { createRef, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert, TextInput} from 'react-native';
 import FIFIUBA from '../assets/FIFIUBA.png'
 
+const ref = React.createRef()
 
 
 const Login = () => {
@@ -17,8 +18,9 @@ const Login = () => {
         if (utext.length!=0 & ptext.length!=0){
           console.log('Logeado');
           Nav.navigate("HomeScreen Logeado")
+          
         }
-    }
+      }
     }
 
     
@@ -27,20 +29,23 @@ const Login = () => {
           <View>
             <Image source={FIFIUBA} style={{ width: 305, height: 159 }} />
           </View>
-            <TextInput
+            <TextInput ref={createRef()}
+              
                 style={styles.input}
                 onChangeText={UserID}
-                placeholder="User"
+                placeholder="                   User                  "
                 keyboardType="default"
+                clearTextOnFocus = {true}
 
             />
-            <TextInput
+            <TextInput 
                 style={styles.input}
                 secureTextEntry = {true}
                 onChangeText={Pass}
-                placeholder="Password"
+                placeholder="            Password"
                 keyboardType="default"
-            />
+                
+                />
           <View>
             <Button  
               type="button" 
@@ -65,7 +70,7 @@ const styles = StyleSheet.create({
     input: {
         height: 40,
         margin: 20,
-        borderWidth: 1,
+        borderWidth: 4,
         padding: 10,
         backgroundColor: 'white',
       },

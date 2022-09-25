@@ -3,15 +3,15 @@ import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert} from 'react-native';
 import FIFI from '../assets/building.jpg'
 import Map_Google from "./Map_Google";
-import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
+//import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
 import ProfileIconSelectList from '../components/atoms/ProfileIconSelectList'
 import SelectUser from './SearchUser'
 import { useNavigation } from '@react-navigation/native';
 
  const Home_Login = () => {
-    
+    const Logeaaaa = false;
     const Nav = useNavigation();
-    
+        
     return(
         <SafeAreaView style={styles.container}>
             <View>

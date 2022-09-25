@@ -16,6 +16,7 @@ import Home from './Screen/Home';
 import Home_Login from './Screen/Home_Login';
 import SearchUser from './Screen/SearchUser'
 import Map_Google from './Screen/Map_Google';
+const MeLogee=false;
 
 const stack = createNativeStackNavigator();
 
@@ -23,33 +24,54 @@ const stack = createNativeStackNavigator();
 function Mstack() {
     return(
         <stack.Navigator
-            initialRouteName="HomeScreen">
+        screenOptions={{
+            cardStyle: {
+              backgroundColor: 'transparent',
+              opacity:1,
+              statusBarColor: 'black',
+        
+            },
+            //animationEnabled: false,
+            //headerShown: false,
+          }}
+            initialRouteName="HomeScreen"
+        >
 
             <stack.Screen
-            name= "HomeScreen Logeado"
-            component={Home_Login}
-            options={{
-                headerShown:false
+                name= "HomeScreen Logeado"
+                component={Home_Login}
+                options={{
+                    headerShown:false
             }}>
             </stack.Screen>
 
 
             <stack.Screen
-            name= "HomeScreen"
-            component={Home}>
+                name= "HomeScreen"
+                component={Home}
+                options={{
+                    headerShown:false
+            }}>
    
             </stack.Screen>
 
             <stack.Screen
                 name = "SearchUser"
                 component = {SearchUser}
-                options = {{title: 'Buscar usuario'}}
+                options = {{
+                    title: 'Buscar usuario',
+                    statusBarColor: '#193752',
+                }}
                 />
 
             <stack.Screen
                 name= "Map_Google"
                 component={Map_Google} 
-                options = {{title: 'Realizar viaje'}}/>
+                options = {{
+                    title: 'Realizar viaje',
+                    statusBarColor: '#193752',
+                    headerTransparent:true
+                }}/>
 
             </stack.Navigator>
     )
@@ -61,16 +83,12 @@ function MyTabs() {
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            screenOptions={{
-                tabBarActiveTintColor: 'blue',
-                headerPressColor: 'red',
-                headerTintColor:'white'
-            }}
             >
             <Tab.Screen
                 name = "Login"
                 component={Login}
                 options={{
+                    headerShown: false,
                     tabBarLabel: "Login",
                     tabBarIcon: ({color, size}) => {
                         <MaterialCommunityIcons name="login" size={24} color="black" />                    }
@@ -81,6 +99,7 @@ function MyTabs() {
                 name = "Home"
                 component={Mstack}
                 options={{
+                    headerShown: false,
                     tabBarLabel: "Home",
                     tabBarIcon: ({color, size}) => {
                         <SimpleLineIcons name="home" size={24} color="blue" />        
@@ -90,7 +109,10 @@ function MyTabs() {
 
             <Tab.Screen 
                 name = "Register" 
-                component={Register}/>
+                component={Register}
+                options={{
+                    headerShown: false,
+                }}/>
         </Tab.Navigator>
     );
 }

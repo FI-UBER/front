@@ -7,20 +7,19 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 
 export default function Map_Google() {
   //Origen
-  const [origin1, setOrigin1] = React.useState()
   const [origin, setOrigin] = React.useState({
-    latitude: 0,
-    longitude: 0,
+    //Casa Rosada como primer origen
+    latitude: -34.60738448397424, 
+    longitude: -58.37032071534236,
     name:null,
   });
   
-  const [destiny1, setDestiny1] = React.useState()
+    //Destino,
   const [destiny, setDestiny] = React.useState({
     //FIUBA
     latitude: -34.61032599547549,
     longitude: -58.36988084080446,
     name:'FIUBA',
-    //Destino,
   });
   const mapRef = React.createRef();
 
@@ -89,7 +88,6 @@ export default function Map_Google() {
 
 
             </MapView>
-            { <Text style={styles.paragraph}>Mi posicion</Text> }
             <Button
               type="button" 
               title="Mi Posicion"
@@ -148,6 +146,14 @@ export default function Map_Google() {
               
                 />
               </View>
+              <View>
+                <Button
+                  style={{}}
+                  type="button" 
+                  title="Precio del viaje"
+                  onPress={() =>Alert.alert('Precio')}>
+                </Button>
+              </View>
  </SafeAreaView>
   );
 }
@@ -161,7 +167,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get('window').width,
-    height: (Dimensions.get('window').height)/2,
+    height: (Dimensions.get('window').height)/2.5,
   },
   input: {
     height: 40,

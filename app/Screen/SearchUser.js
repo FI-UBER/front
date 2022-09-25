@@ -1,5 +1,5 @@
 
-import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
+//import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
 import {TextInput, View} from 'react-native';
 import React from 'react';
 
