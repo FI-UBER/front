@@ -14,6 +14,10 @@ export default function Map_Google() {
     name:null,
   });
   
+  const LatLngOrigin = (lat, long) =>{
+    setOrigin({...origin,latitude: lat, longitude: long})
+  }
+  
     //Destino,
   const [destiny, setDestiny] = React.useState({
     //FIUBA
@@ -21,7 +25,30 @@ export default function Map_Google() {
     longitude: -58.36988084080446,
     name:'FIUBA',
   });
+
+  const LatLngDestiny = (lat, long) =>{
+    setDestiny({...origin,latitude: lat, longitude: long})
+  }
+
   const mapRef = React.createRef();
+
+
+  const coords = [origin,destiny];
+
+  //Ajusta vista del mapa a origen/destino
+ async function fitMapToOriginDestiny() {
+
+mapRef.current.fitToCoordinates(coords, {
+      edgePadding: {
+        top: 20,
+        right: 20,
+        bottom: 20,
+        left: 20,
+      },
+    });
+  }
+
+
 
   //Hook
   useEffect(() => {
@@ -33,12 +60,13 @@ export default function Map_Google() {
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      setOrigin({...origin,latitude: location.coords.latitude, longitude: location.coords.longitude})
+      setOrigin({...origin,latitude: location.coords.latitude, longitude: location.coords.longitude});
     })();
   }, []);
 
 
-//Mostrar/actualizar posicion al presionar boton
+
+//Mostrar/actualizar posicion 
   const changeRegion = () =>{
 
     mapRef.current.animateToRegion({
@@ -85,23 +113,21 @@ export default function Map_Google() {
                 strokeColor= 'black'
                  >
             </MapViewDirections> }
-
-
             </MapView>
-            <Button
+            {/* <Button
               type="button" 
               title="Mi Posicion"
               onPress={() =>(changeRegion())}>
             </Button>
             { <Text style={styles.paragraph}>Latitud: {origin.latitude}</Text> }
-            { <Text style={styles.paragraph}>Longitud: {origin.longitude}</Text> }
+            { <Text style={styles.paragraph}>Longitud: {origin.longitude}</Text> } */}
             <View style={{marginTop: 10}}>
             { <Text style={styles.paragraph}> ----------------------------------------------------------- Origen------------------------------------------------------------ </Text> }
               <GooglePlacesAutocomplete
                 placeholder="Type a place"
                 query={{key: 'AIzaSyARscCcGqdra2Rjz5p8FXvm8GMeMEi6qak'}}
                 fetchDetails={true}
-                onPress={(data, details = null) => console.log(data, details)}
+                onPress={(data, details = null) => LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng)}
                 onFail={error => console.log(error)}
                 onNotFound={() => console.log('no results')}
                 styles={{
@@ -118,16 +144,15 @@ export default function Map_Google() {
                 }}
               
                 />
-              </View>
-              <View style={{marginVertical: 10, flex: 1, }}>
-              { <Text style={styles.paragraph}>---------------------------------------------------------- Destino------------------------------------------------------------- </Text> }
+               <Text style={styles.paragraph}>---------------------------------------------------------- Destino------------------------------------------------------------- </Text> 
+             
               <GooglePlacesAutocomplete
                 placeholder="Type a place"
                 query={{
                   key: 'AIzaSyARscCcGqdra2Rjz5p8FXvm8GMeMEi6qak',
                   language: 'es'}}
                 fetchDetails={true}
-                onPress={(data, details = null) => console.log(data, details)}
+                onPress={(data, details = null) => LatLngDestiny(details.geometry.location.lat, details.geometry.location.lng)}
                 onFail={error => console.log(error)}
                 onNotFound={() => console.log('no results')}
                 styles={{
@@ -145,6 +170,9 @@ export default function Map_Google() {
                 }}
               
                 />
+                </View>
+                <View style={{padding:20}}>
+                <Button title={'Ajustar mapa'} onPress={fitMapToOriginDestiny} />
               </View>
               <View>
                 <Button
@@ -167,7 +195,7 @@ const styles = StyleSheet.create({
   },
   map: {
     width: Dimensions.get('window').width,
-    height: (Dimensions.get('window').height)/2.5,
+    height: (Dimensions.get('window').height)/2,
   },
   input: {
     height: 40,

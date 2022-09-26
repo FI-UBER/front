@@ -1,7 +1,7 @@
 import React from "react";
 import { StatusBar } from 'expo-status-bar';
 import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert} from 'react-native';
-import FIFI from '../assets/building.jpg'
+import CAR from '../assets/18-yellow-flying-car.webp'
 import Map_Google from "./Map_Google";
 //import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
 import ProfileIconSelectList from '../components/atoms/ProfileIconSelectList'
@@ -15,7 +15,7 @@ import { useNavigation } from '@react-navigation/native';
     return(
         <SafeAreaView style={styles.container}>
             <View>
-                <Image source={FIFI} style={{ width: 305, height: 159 }} />
+                <Image source={CAR} style={{ width: 305, height: 159 }} />
             </View>
             <View>
                 <Text
