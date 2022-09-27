@@ -9,6 +9,8 @@ const [lntext, LastName] = useState(null);
 const [phonenum, Phone] = useState(null);
 const [emailtext, Email] = useState(null);
 const [licnum, Licence] = useState(null);
+const [platenum, CarPlate] = useState(null);
+const [cartext, CarModel] = useState(null);
 const [birthdate, Birth] = useState(new Date().format('DD-MM-YYYY'));
 const [passtext, Pass] = useState(null);
 const [openDate, setOpenDate] = useState(false)
@@ -40,8 +42,8 @@ const checkBirthDate = () => {
 }
 
 const checkForm = () => {
-    if (nametext!=null & lntext!=null & phonenum!=null & licnum!=null & passtext!=null){
-        if (nametext.length!=0 & lntext.length!=0 & phonenum.length!=0 & licnum.length!=0 & passtext.length!=0){
+    if (nametext!=null & lntext!=null & phonenum!=null & licnum!=null & platenum!=null & cartext!=null & passtext!=null){
+        if (nametext.length!=0 & lntext.length!=0 & phonenum.length!=0 & licnum.length!=0 & platenum.length!=0 & cartext.length!=0 & passtext.length!=0){
             if (checkEmail() & checkBirthDate()){
                 return true
             }
@@ -52,7 +54,7 @@ const checkForm = () => {
 
 const handleRegister = () => {
     if (checkForm()){
-        body = { name: nametext, lastname: lntext, phone: phonenum, mail: emailtext, birthdate: birthdate, licence: licnum, password: passtext }
+        body = { name: nametext, lastname: lntext, phone: phonenum, mail: emailtext, birthdate: birthdate, licence: licnum, carplate: platenum, carbrand: cartext, password: passtext }
         console.log(body);
         console.log('Registrado');
         //setDisabled(!isDisabled)
@@ -94,7 +96,7 @@ const DriverRegister = () => {
             <DatePicker
                 modal
                 open={openDate}
-                date={birthdate}
+                date={Birth}
                 onConfirm={(date) => {
                     setOpen(false)
                     setDate(date)
@@ -105,8 +107,26 @@ const DriverRegister = () => {
             />
             <TextInput
                 style={styles.input}
+                onChangeText={Licence}
+                placeholder="Your Licence number"
+                keyboardType="default"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={CarPlate}
+                placeholder="Your Car Plate number"
+                keyboardType="default"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={CarModel}
+                placeholder="Your Car Model"
+                keyboardType="default"
+            />
+            <TextInput
+                style={styles.input}
                 onChangeText={Pass}
-                placeholder="Password"
+                placeholder="Your Password"
                 keyboardType="default"
             />
           <View>
