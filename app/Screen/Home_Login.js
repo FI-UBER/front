@@ -47,6 +47,11 @@ import { useNavigation } from '@react-navigation/native';
                     title = "Buscar un usuario"
                     onPress = {() => {Nav.navigate("SearchUser");}} >
                 </Button>
+
+                <Button
+                    title = "Usuario"
+                    onPress = {() => {Nav.navigate("UserProfile");}} >
+                </Button>
                 
             </View>
 

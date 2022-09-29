@@ -16,6 +16,7 @@ import Home from './Screen/Home';
 import Home_Login from './Screen/Home_Login';
 import SearchUser from './Screen/SearchUser'
 import Map_Google from './Screen/Map_Google';
+import UserProfile from './Screen/UserProfile'
 const MeLogee=false;
 
 const stack = createNativeStackNavigator();
@@ -61,6 +62,16 @@ function Mstack() {
                 options = {{
                     title: 'Buscar usuario',
                     statusBarColor: '#193752',
+                }}
+                />
+
+            <stack.Screen
+                name = "UserProfile"
+                component = {UserProfile}
+                options = {{
+                    //title: 'usr',
+                    statusBarColor: '#193752',
+                    headerShown: false,
                 }}
                 />
 
