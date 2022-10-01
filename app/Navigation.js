@@ -17,6 +17,10 @@ import Home_Login from './Screen/Home_Login';
 import SearchUser from './Screen/SearchUser'
 import Map_Google from './Screen/Map_Google';
 import UserProfile from './Screen/UserProfile'
+import MyTrips from "./Screen/MyTrips"
+import MyConversations from "./Screen/MyConversations"
+import Configuration from "./Screen/Configuration"
+
 const MeLogee=false;
 
 const stack = createNativeStackNavigator();
@@ -62,6 +66,7 @@ function Mstack() {
                 options = {{
                     title: 'Buscar usuario',
                     statusBarColor: '#193752',
+                    headerShown: false,
                 }}
                 />
 
@@ -83,6 +88,36 @@ function Mstack() {
                     statusBarColor: '#193752',
                     headerTransparent:true
                 }}/>
+
+            <stack.Screen
+                name= "MyTrips"
+                component={MyTrips} 
+                options = {{
+                    title: 'Mis viajes',
+                    statusBarColor: '#193752',
+                    headerShown: false,
+                }}
+            />
+
+            <stack.Screen
+                name= "MyConversations"
+                component={MyConversations} 
+                options = {{
+                    title: 'Mis conversaciones',
+                    statusBarColor: '#193752',
+                    headerShown: false,
+                }}
+            />
+
+            <stack.Screen
+                name= "Configuration"
+                component={Configuration} 
+                options = {{
+                    title: 'Configuration',
+                    statusBarColor: '#193752',
+                    headerShown: false,
+                }}
+            />
 
             </stack.Navigator>
     )

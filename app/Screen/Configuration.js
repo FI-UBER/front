@@ -1,19 +1,13 @@
 //import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
-import {TextInput, View, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
 import React from 'react';
 
-const SearchUser = () => {
+const Configuration = () => {
     //const Nav = useNavigation();
 
     return (
     <SafeAreaView style={styles.container}>
-        <TextInput 
-        placeholder = "Ingrese un nombre"
-        style = {
-            {borderBottomColor : "#ccc",
-            borderBottomWidth : 1,
-            backgroundColor: "#ccc"}
-        }/>
+        <Text> Configuración </Text>
     </SafeAreaView>
     );
 }
@@ -27,4 +21,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SearchUser;
+export default Configuration;

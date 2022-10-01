@@ -4,16 +4,20 @@ import {
   Text,
   View,
   Image,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
 import profilepic from '../assets/profilepic.jpg'
 import messages from '../assets/conversaciones.png'
 import config from '../assets/config.png'
 import FIFI from '../assets/FIFIUBA.png'
+import { useNavigation } from '@react-navigation/native';
 
 //export default class UserProfileView extends Component {
 
-    const UserProfile = () => {
+const UserProfile = () => {
+    const Nav = useNavigation();
+
     return (
     <SafeAreaView>
         <View style={styles.container}>
@@ -34,7 +38,11 @@ import FIFI from '../assets/FIFIUBA.png'
                         <Image style={styles.icon} source={FIFI}/>
                     </View>
                     <View style={styles.infoContent}>
-                        <Text style={styles.info}>Mis viajes</Text>
+                        <TouchableOpacity
+                            onPress={() => {Nav.navigate("MyTrips");}}
+                        >
+                            <Text style={styles.info}>Mis viajes</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -43,7 +51,11 @@ import FIFI from '../assets/FIFIUBA.png'
                         <Image style={styles.icon} source={profilepic}/>
                     </View>
                     <View style={styles.infoContent}>
-                        <Text style={styles.info}>Buscar un usuario</Text>
+                        <TouchableOpacity
+                            onPress={() => {Nav.navigate("SearchUser");}}
+                        >
+                            <Text style={styles.info} >Buscar un usuario</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -52,7 +64,11 @@ import FIFI from '../assets/FIFIUBA.png'
                         <Image style={styles.icon} source={messages}/>
                     </View>
                     <View style={styles.infoContent}>
-                        <Text style={styles.info}>Mis conversaciones</Text>
+                        <TouchableOpacity
+                            onPress={() => {Nav.navigate("MyConversations");}}
+                        >
+                            <Text style={styles.info}>Mis conversaciones</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -61,7 +77,11 @@ import FIFI from '../assets/FIFIUBA.png'
                         <Image style={styles.icon} source={config}/>
                     </View>
                     <View style={styles.infoContent}>
-                        <Text style={styles.info}>Configuración</Text>
+                        <TouchableOpacity
+                            onPress={() => {Nav.navigate("Configuration");}}
+                        >
+                            <Text style={styles.info}>Configuración</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
