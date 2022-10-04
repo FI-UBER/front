@@ -58,6 +58,8 @@
 
 Asi debe quedar babel.config
 
+![image info](./assets/babel.png)
+
 
 module.exports = function(api) {
   api.cache(true);
