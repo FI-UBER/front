@@ -8,7 +8,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-
 //screens
 import Login from './Screen/Login';
 import Register from './Screen/Register';
@@ -16,7 +15,7 @@ import Home from './Screen/Home';
 import Home_Login from './Screen/Home_Login';
 import SearchUser from './Screen/SearchUser'
 import Map_Google from './Screen/Map_Google';
-const MeLogee=false;
+import View_Map from './Screen/View_Map';
 
 const stack = createNativeStackNavigator();
 
@@ -34,9 +33,7 @@ function Mstack() {
             //animationEnabled: false,
             //headerShown: false,
           }}
-            initialRouteName="HomeScreen"
-        >
-
+            initialRouteName="HomeScreen">
             <stack.Screen
                 name= "HomeScreen Logeado"
                 component={Home_Login}
@@ -44,35 +41,37 @@ function Mstack() {
                     headerShown:false
             }}>
             </stack.Screen>
-
-
             <stack.Screen
                 name= "HomeScreen"
                 component={Home}
                 options={{
                     headerShown:false
             }}>
-   
             </stack.Screen>
-
             <stack.Screen
                 name = "SearchUser"
                 component = {SearchUser}
                 options = {{
                     title: 'Buscar usuario',
                     statusBarColor: '#193752',
-                }}
-                />
-
+                }}/>
             <stack.Screen
-                name= "Map_Google"
+                name= "Choose"
                 component={Map_Google} 
                 options = {{
                     title: 'Realizar viaje',
                     statusBarColor: '#193752',
-                    headerTransparent:true
+                    //headerTransparent:true
                 }}/>
 
+            <stack.Screen
+                name= "Map_Google"
+                component={View_Map} 
+                options = {{
+                    title: 'Map of Travel',
+                    statusBarColor: '#193752',
+                    //headerTransparent:true
+                }}/>
             </stack.Navigator>
     )
 }
