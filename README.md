@@ -58,7 +58,7 @@
 
 Asi debe quedar babel.config
 
-![image info](.app/assets/babel.png)
+![image info](./app/assets/babel.png)
 
 
 module.exports = function(api) {
