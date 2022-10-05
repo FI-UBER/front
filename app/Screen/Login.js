@@ -20,7 +20,7 @@ function Login({navigation}){
         navigation.navigate("Home Login")
         )
       }
-    }, [context.user]);    
+    }, []);    
 
     function handleSubmit() {
       if (utext!=null & ptext!=null){

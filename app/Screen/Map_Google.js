@@ -5,23 +5,22 @@ import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import {GOOGLE_API_KEY} from '@env'
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
 
 export default function Map_Google({navigation}) {
   const context = currentSession();
   //const Nav = useNavigation();
-  //const [context, setContext]  = React.useState(false);
+  const [isFocused, setFocus] = React.useState(false)
   const [distance, setDistance] = React.useState(0)
   //Origen
+
   const [_position, setPos] = React.useState({
     //Casa Rosada como primer origen
-    latitude: 0, 
-    longitude: 0,
+    latitude: null, 
+    longitude: null,
   });
   
-
-
   //Origen
   const [origin, setOrigin] = React.useState({
     //Casa Rosada como primer origen
@@ -68,7 +67,8 @@ function fitMapToOriginDestiny() {
   //Hook
   useEffect(() => {
     (async () => {
-      let {status}  = await Location.requestForegroundPermissionsAsync();
+      if (isFocused) {
+        let {status}  = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert('Permission to access location was denied');
       }
@@ -76,30 +76,43 @@ function fitMapToOriginDestiny() {
         try {
           const location = await Location.getCurrentPositionAsync({});
           setPos({..._position,latitude: location.coords.latitude, longitude: location.coords.longitude});
+          if (location.latitude === null && location.longitude === null) {
+          //Alert.alert('Se debe poder localizar tu posicion. Enciende tu ubicacion');
+            navigation.navigate("Home Login")
+          }
         } catch (error) {
           Alert.alert('Se debe poder localizar tu posicion. Enciende tu ubicacion');
-          if (context.user){
-            navigation.navigate('Home Login')
-          }
-          else {
-            navigation.navigate('Login')
-          }
+          navigation.navigate('Home Login')
         }
       }
     }
+    }
     )();
-  }, [origin]);
+  }, [isFocused]);
+
+
+  //Hook
+  useFocusEffect(
+    React.useCallback(() => {
+   //   alert('Screen was focused');
+      setFocus(true);
+      return () => {
+     //   alert('Screen was unfocused');
+        setFocus(false)
+      };
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styles.container}>
                 <Button
-                  style={{padding:20}}
+                  style={{padding:50, position: 'relative'}}
                   type="button" 
                   title="Mi posicion como Origen"
                   onPress= {MyPosition}>
                 </Button>
             <View >
-              { <Text > ----------------------------------------------------------- Origen------------------------------------------------------------ </Text> }
+              { <Text >Origen</Text> }
             </View>
               <View style={ styles.google}>
               <GooglePlacesAutocomplete
@@ -131,11 +144,12 @@ function fitMapToOriginDestiny() {
                     position: 'relative'
                   },
                   predefinedPlacesDescription: {
-                    color: '#1faadb'
+                    color: '#1faadb',
                   },
                   container: {
                     flex: 0,
                     width:"70%",
+                    height:"100%",
                     
                     marginLeft:20,
                     marginRight:20,
@@ -148,14 +162,11 @@ function fitMapToOriginDestiny() {
                     color: '#3caf50',
                     position: 'absolute'
                   },
-                  // row: {
-                  //   height: "100%",
-                  //  },
                 }}
                 />
               </View>
               <View>
-              <Text >---------------------------------------------------------- Destino------------------------------------------------------------- </Text> 
+              <Text >Destino </Text> 
               </View>
               <View style={styles.google}>
               <GooglePlacesAutocomplete
@@ -187,7 +198,10 @@ function fitMapToOriginDestiny() {
                   },
                   container: {
                     flex: 0,
-                    position:'absolut'
+                    width:"70%",
+                    height:"100%",
+                    marginLeft:20,
+                    marginRight:20,
                   },
                   description: {
                     color: '#000',
@@ -197,12 +211,7 @@ function fitMapToOriginDestiny() {
                   predefinedPlacesDescription: {
                     color: '#3caf50',
                   },
-                  container: {
-                    flex: 0,
-                    width:"70%",
-                    marginLeft:20,
-                    marginRight:20,
-                  },
+
                 }}
                 />
               </View>
