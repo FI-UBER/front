@@ -46,6 +46,45 @@
 
 - npm i react-native-google-places-autocomplete
 
+*DOTENV para usar .emv*
+- npm i react-native-dotenv, configurar babel config y crear un archivo llamado
+.env que tenga la API KEY de Google
+
+*DRAWER,*
+- npm i @react-navigation/drawer (y npx expo install react-native-gesture-handler react-native-reanimated ) y configurar index y babel
+
+*REACT SPRING*
+- npm install react-spring
+
+Asi debe quedar babel.config
+
+![image info](./app/assets/babel.png)
+
+
+module.exports = function(api) {
+  api.cache(true);
+  return {
+    presets: ['babel-preset-expo'],
+    "plugins": [
+      ["module:react-native-dotenv", {
+        "envName": "APP_ENV",
+        "moduleName": "@env",
+        "path": ".env",
+        "blocklist": null,
+        "allowlist": null,
+        "safe": false,
+        "allowUndefined": true,
+        "verbose": false
+      }],'react-native-reanimated/plugin',
+    ],
+  };
+};
+
+
+Poner esto al ppio de index.js
+
+import 'react-native-gesture-handler';
+
 ### Ejecucion 
 
 En front/app

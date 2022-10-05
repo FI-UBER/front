@@ -1,34 +1,81 @@
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
-import React, { createRef, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import React, { createRef, useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert, TextInput} from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import FIFIUBA from '../assets/FIFIUBA.png'
+import {currentSession} from '../context'
+
 
 const ref = React.createRef()
 
-
-const Login = () => {
+function Login({navigation}){
+    const context = currentSession();
     const [utext, UserID] = React.useState(null);
     const [ptext, Pass] = React.useState(null);
-    const Nav = useNavigation();
+    const [isLogin, setIsLogin] = React.useState(null);
 
 
-    const handleSubmit = () => {
+      
+  useFocusEffect(
+    React.useCallback(() => {
+   //   alert('Screen was focused');
+    if (context.user) {
+      navigation.navigate('Home Login');
+    }  
+      return () => {
+     //   alert('Screen was unfocused');
+      };
+    }, [])
+  );
+
+    useEffect(() => {
+      if(context.user){
+        return (
+        navigation.navigate("Home Login")
+        )
+      }
+    }, []);    
+
+    function handleSubmit() {
       if (utext!=null & ptext!=null){
         if (utext.length!=0 & ptext.length!=0){
           console.log('Logeado');
-          Nav.navigate("HomeScreen Logeado")
-          
+          setIsLogin(true)
+          context.login();
+          return(  
+             navigation.navigate("Home Login")
+          )
         }
+        else{
+          console.log('No Logeado');
+          setIsLogin(false)
+        } 
+      }
+      else{
+        console.log('No Logeado');
+        setIsLogin(false)
+      
       }
     }
-
     
     return(
         <SafeAreaView style={styles.container}>
+          
           <View>
             <Image source={FIFIUBA} style={{ width: 305, height: 159 }} />
           </View>
+
+          {(() => {
+              if (isLogin == false){
+                  return (
+                      <Text style = {{backgroundColor: 'yellow'}}>Usuario no encontrado</Text>
+                  )
+              }
+              
+              return null;
+            })()}
+
+
             <TextInput ref={createRef()}
               
                 style={styles.input}
@@ -57,7 +104,7 @@ const Login = () => {
           </View> 
         </SafeAreaView>
     );
-    
+  
 }
 
 const styles = StyleSheet.create({
@@ -74,7 +121,7 @@ const styles = StyleSheet.create({
         padding: 10,
         backgroundColor: 'white',
       },
-    container: { flex: 1, justifyContent: "center", alignItems: "center" },
+    //container: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
 
 export default Login;

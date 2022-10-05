@@ -5,19 +5,20 @@ import {
   View,
   Image,
   SafeAreaView,
-  TouchableOpacity
+  TouchableOpacity, 
+  Pressable
 } from 'react-native';
 import profilepic from '../assets/profilepic.jpg'
 import messages from '../assets/conversaciones.png'
 import config from '../assets/config.png'
 import FIFI from '../assets/FIFIUBA.png'
+import home from '../assets/home.png'
 import { useNavigation } from '@react-navigation/native';
 
 //export default class UserProfileView extends Component {
 
-const UserProfile = () => {
-    const Nav = useNavigation();
-
+function UserProfile ( {navigation} ) {
+    
     return (
     <SafeAreaView>
         <View style={styles.container}>
@@ -39,7 +40,7 @@ const UserProfile = () => {
                     </View>
                     <View style={styles.infoContent}>
                         <TouchableOpacity
-                            onPress={() => {Nav.navigate("MyTrips");}}
+                            onPress={() => {navigation.navigate("MyTrips");}}
                         >
                             <Text style={styles.info}>Mis viajes</Text>
                         </TouchableOpacity>
@@ -52,7 +53,7 @@ const UserProfile = () => {
                     </View>
                     <View style={styles.infoContent}>
                         <TouchableOpacity
-                            onPress={() => {Nav.navigate("SearchUser");}}
+                            onPress={() => {navigation.navigate("SearchUser");}}
                         >
                             <Text style={styles.info} >Buscar un usuario</Text>
                         </TouchableOpacity>
@@ -65,7 +66,7 @@ const UserProfile = () => {
                     </View>
                     <View style={styles.infoContent}>
                         <TouchableOpacity
-                            onPress={() => {Nav.navigate("MyConversations");}}
+                            onPress={() => {navigation.navigate("MyConversations");}}
                         >
                             <Text style={styles.info}>Mis conversaciones</Text>
                         </TouchableOpacity>
@@ -78,7 +79,7 @@ const UserProfile = () => {
                     </View>
                     <View style={styles.infoContent}>
                         <TouchableOpacity
-                            onPress={() => {Nav.navigate("Configuration");}}
+                            onPress={() => {navigation.navigate("Configuration");}}
                         >
                             <Text style={styles.info}>Configuración</Text>
                         </TouchableOpacity>
@@ -87,11 +88,26 @@ const UserProfile = () => {
 
             </View>
         </View>
+        <View style={styles.item}>
+            <View style={styles.iconContent}>
+                <Image style={styles.icon} source={home}/>
+            </View>
+            <View style={styles.infoContent}>
+                <TouchableOpacity
+                    onPress={() => {navigation.navigate("Home Login");}}
+                >
+                    <Text style={styles.info}>Go back to HomeLogin</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
     </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    text:{
+
+    },
     header:{
         //backgroundColor: "#DCDCDC",
         backgroundColor: "#F6F0EF",

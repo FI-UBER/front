@@ -1,13 +1,21 @@
 //import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
-import {Text, View, StyleSheet, SafeAreaView} from 'react-native';
+import {Text, View, StyleSheet, SafeAreaView, Pressable} from 'react-native';
 import React from 'react';
 
-const MyConversations = () => {
+function MyConversations({navigation}) {
     //const Nav = useNavigation();
 
     return (
     <SafeAreaView style={styles.container}>
         <Text> Mis conversaciones </Text>
+        <Pressable
+            onPress={() => {navigation.navigate("Profile")}}
+                style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
+            >
+            <Text style={styles.text}>
+                 Go Back to Profile
+            </Text>
+        </Pressable> 
     </SafeAreaView>
     );
 }
@@ -19,6 +27,12 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
     },
-});
+    text: {
+        
+        fontSize: 40,
+        fontWeight: 'bold',
+        margin: 10,
+    }
+})
 
 export default MyConversations;
