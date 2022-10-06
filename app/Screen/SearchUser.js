@@ -1,19 +1,42 @@
 //import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
 import {TextInput, View, StyleSheet, SafeAreaView, Pressable, Text} from 'react-native';
-import React from 'react';
+import {React, useState} from 'react';
+
+const searchUser = (text) => {
+        alert(text);
+    }
 
 function SearchUser({navigation}){
     //const Nav = useNavigation();
+    const [text, setText] = useState('');
+
+    
 
     return (
     <SafeAreaView style={styles.container}>
         <TextInput 
         placeholder = "Ingrese un nombre"
+        textAlign={'center'}
+        onSubmitEditing={() => {searchUser(text)}}
+        onChangeText={newText => setText(newText)}
         style = {
             {borderBottomColor : "#ccc",
             borderBottomWidth : 1,
-            backgroundColor: "#ccc"}
+            backgroundColor: "#ccc",
+            height: 40,
+            width: 340,
+            fontSize: 15,
+            borderRadius: 20,
+        }
         }/>
+        <Pressable
+            onPress={() => {searchUser(text);}}
+            style={styles.buttonStyle}
+            >
+            <Text style={styles.buttonText}>
+                 Buscar
+            </Text>
+        </Pressable> 
         <Pressable
             onPress={() => {navigation.navigate("Profile");}}
                 style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}
@@ -38,6 +61,13 @@ const styles = StyleSheet.create({
         fontSize: 40,
         fontWeight: 'bold',
         margin: 10,
+    },
+    buttonText: {
+        padding: 20,
+    },
+    buttonStyle: {
+        backgroundColor: 'rgba(220, 220, 220, 0.8)',
+        borderRadius: 50,
     }
 });
 
