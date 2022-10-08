@@ -4,7 +4,7 @@ import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, 
 import { useFocusEffect } from '@react-navigation/native';
 import FIFIUBA from '../assets/FIFIUBA.png'
 import {currentSession} from '../context'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ref = React.createRef()
 
@@ -14,6 +14,10 @@ function Login({navigation}){
     const [ptext, Pass] = React.useState(null);
     const [isLogin, setIsLogin] = React.useState(null);
 
+    const setProfile = async() => {
+        await AsyncStorage.setItem('userprofile', JSON.stringify({'name': 'nombre', 'lastName': 'apellido', 'email': 'email@email.com', 'city': 'Buenos Aires', 'country': 'Argentina'}));
+        //por ahora hardcodeado, hay que obtener los datos del microservicio users
+    }
 
       
   useFocusEffect(
@@ -42,6 +46,7 @@ function Login({navigation}){
           console.log('Logeado');
           setIsLogin(true)
           context.login();
+          setProfile()
           return(  
              navigation.navigate("Home Login")
           )

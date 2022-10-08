@@ -85,6 +85,8 @@ Poner esto al ppio de index.js
 
 import 'react-native-gesture-handler';
 
+expo install @react-native-async-storage/async-storage
+
 ### Ejecucion 
 
 En front/app

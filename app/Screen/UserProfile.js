@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
@@ -14,10 +14,28 @@ import config from '../assets/config.png'
 import FIFI from '../assets/FIFIUBA.png'
 import home from '../assets/home.png'
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//export default class UserProfileView extends Component {
 
 function UserProfile ( {navigation} ) {
+    const [profile,setprofile] = React.useState("");
+
+    const getProfile = async () => {  
+        const jsonValue = await AsyncStorage.getItem('userprofile');
+        const userProfile =  JSON.parse(jsonValue);  
+        if (userProfile !== null) {
+            setprofile(userProfile);
+        }
+        return userProfile;
+
+    }
+
+    useEffect(() => {  
+        getProfile().then((keyValue) => {
+            //nothing
+     });
+        
+    },[]);
     
     return (
     <SafeAreaView>
@@ -27,9 +45,10 @@ function UserProfile ( {navigation} ) {
                     <Image style={styles.avatar}
                     source={profilepic}/>
 
-                    <Text style={styles.name}>Juan Pérez </Text>
-                    <Text style={styles.userInfo}>juanperez@mail.com </Text>
-                    <Text style={styles.userInfo}>Buenos Aires, Argentina </Text>
+                    <Text style={styles.name}>{profile.name} {profile.lastName}</Text>
+                    
+                    <Text style={styles.userInfo}>{profile.email}</Text>
+                    <Text style={styles.userInfo}>{profile.city}, {profile.country}</Text>
                 </View>
             </View>
 
