@@ -7,13 +7,13 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import {GOOGLE_API_KEY} from '@env'
 import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
+import price from "./service2"
 
 export default function Map_Google({navigation}) {
   const context = currentSession();
   //const Nav = useNavigation();
   const [isFocused, setFocus] = React.useState(false)
   const [distance, setDistance] = React.useState(0)
-  //Origen
 
   const [_position, setPos] = React.useState({
     //Casa Rosada como primer origen
@@ -90,7 +90,18 @@ function fitMapToOriginDestiny() {
     )();
   }, [isFocused]);
 
+  //llamada al api de viajes para precio en service2
+  const asasap = async()=>{
+    const distance=41;
+      try {
+        console.log("price")
+        //const response = await price(distance)
+        Alert.alert("precio")
+    } catch (e) {
+        console.log(e.message)
+    }
 
+  }
   //Hook
   useFocusEffect(
     React.useCallback(() => {
@@ -105,12 +116,12 @@ function fitMapToOriginDestiny() {
 
   return (
     <SafeAreaView style={styles.container}>
-                <Button
-                  style={{padding:50, position: 'relative'}}
-                  type="button" 
-                  title="Mi posicion como Origen"
-                  onPress= {MyPosition}>
-                </Button>
+            <Button
+              style={{padding:50, position: 'relative'}}
+              type="button" 
+              title="Mi posicion como Origen"
+              onPress= {MyPosition}>
+            </Button>
             <View >
               { <Text >Origen</Text> }
             </View>
@@ -124,6 +135,7 @@ function fitMapToOriginDestiny() {
                 onPress={(data, details = null) => {LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng); console.log(details)}}
                 onFail={error => console.log(error)}
                 onNotFound={() => console.log('no results')}
+                onSubmitEditing={true}
                
                 styles={{
                   textInputContainer:{
@@ -150,6 +162,7 @@ function fitMapToOriginDestiny() {
                     flex: 0,
                     width:"70%",
                     height:"100%",
+                    
                     
                     marginLeft:20,
                     marginRight:20,
@@ -219,55 +232,57 @@ function fitMapToOriginDestiny() {
                 <Text>Distancia:{distance}</Text>
               </View>
 
-                 <MapView style={styles.map} 
-                  ref={mapRef}
-                  showsUserLocation = {true}
-                  followsUserLocation={true}
-                  showsMyLocationButton={true}
-                  initialRegion={{
-                    latitude: origin.latitude,
-                    longitude: origin.longitude,
-                      latitudeDelta: 0.1,
-                      longitudeDelta: 0.1,
-                      }}
-                >
-                  <Marker
-                  //Pin en origen 
-                    title='Origen'
-                    coordinate={origin}
-                  >
-                  </Marker>
-                  <Marker
-                    //Pin en destino
-                      title='Destino'
-                      coordinate={destiny}>
-                  </Marker>
-                    <MapViewDirections
-                    //API KEY Requerido
-                      origin={origin}
-                      destination={destiny}
-                      apikey={GOOGLE_API_KEY}
-                      strokeWidht={7}
-                      strokeColor= 'black'
-                      onStart={(params) => {
-                      }}
-                      onReady={result => {
-                        setDistance(result.distance)
-                        console.log("Distancia")
-                        console.log(result.distance)
-                      }}>
-                    </MapViewDirections>
-                 </MapView>
-                 <View>
-                <Button
-                  style={{padding:20}}
-                  type="button" 
-                  title="Precio del viaje"
-                  onPress= {() => {Alert.alert("Precio")}}>
-                </Button>
-                </View> 
+              <MapView style={styles.map} 
+              ref={mapRef}
+              showsUserLocation = {true}
+              followsUserLocation={true}
+              showsMyLocationButton={true}
+              initialRegion={{
+                latitude: origin.latitude,
+                longitude: origin.longitude,
+                  latitudeDelta: 0.1,
+                  longitudeDelta: 0.1,
+                  }}
+        >
+              <Marker
+              //Pin en origen 
+                title='Origen'
+                coordinate={origin}
+              >
+              </Marker>
+              <Marker
+                //Pin en destino
+                  title='Destino'
+                  coordinate={destiny}>
+              </Marker>
+                <MapViewDirections
+                //API KEY Requerido
+                  origin={origin}
+                  destination={destiny}
+                  apikey={GOOGLE_API_KEY}
+                  strokeWidht={7}
+                  strokeColor= 'black'
+                  onStart={(params) => {
+                  }}
+                  onReady={result => {
+                    setDistance(result.distance)
+                    console.log("Distancia")
+                    console.log(result.distance)
+                  }}>
+                </MapViewDirections>
+            </MapView>
+            <View>
+              <Button
+                style={{padding:20}}
+                type="button" 
+                title="Precio del viaje"
+                onPress= {asasap}>
+              </Button>
+            </View> 
     </SafeAreaView>
     );
+
+
 
 
   function MyPosition() {

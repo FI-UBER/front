@@ -11,6 +11,7 @@ import Login from './Screen/Login';
 import MyTrips from "./Screen/MyTrips"
 import MyConversations from "./Screen/MyConversations"
 import Configuration from "./Screen/Configuration"
+import  Register  from "./Screen/Register";
 
 const Drawer = createDrawerNavigator()
 import {currentSession} from './context'
@@ -53,6 +54,16 @@ export default function DrawerNavigator() {
                 <Drawer.Screen 
                     name = "Login" 
                     component={Login}
+                    options ={{
+                        
+                        drawerItemStyle: {
+                            display: showNotLogin,
+                        }
+                    }}
+                   />
+                <Drawer.Screen 
+                    name = "Register" 
+                    component={Register}
                     options ={{
                         
                         drawerItemStyle: {

@@ -1,17 +1,22 @@
 import { setStatusBarNetworkActivityIndicatorVisible } from 'expo-status-bar';
 import React, { createRef, useState, useEffect } from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert, TextInput} from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert, TextInput} from 'react-native';
+import {Button} from 'react-native-paper'
 import { useFocusEffect } from '@react-navigation/native';
 import FIFIUBA from '../assets/FIFIUBA.png'
 import {currentSession} from '../context'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import login from "./service"
 
 const ref = React.createRef()
 
 function Login({navigation}){
     const context = currentSession();
-    const [utext, UserID] = React.useState(null);
-    const [ptext, Pass] = React.useState(null);
+    const [email, UserID] = React.useState(null);
+    const [password, Pass] = React.useState(null);
+    const [error, setError] = useState('')
+    const [token, setToken] = useState('')
     const [isLogin, setIsLogin] = React.useState(null);
 
     const setProfile = async() => {
@@ -40,9 +45,20 @@ function Login({navigation}){
       }
     }, []);    
 
-    function handleSubmit() {
-      if (utext!=null & ptext!=null){
-        if (utext.length!=0 & ptext.length!=0){
+    const handleSubmit = async()=>{
+
+    //   try {
+    //     setIsLogin(true)
+    //     console.log({email, password})
+    //     const { token } = await login({ email, password })
+    //     setToken(token)
+    //     navigation.navigate('Home Login')
+    // } catch (e) {
+    //     setError(e.message)
+    // }
+    
+      if (email!=null & password!=null){
+        if (email.length!=0 & password.length!=0){
           console.log('Logeado');
           setIsLogin(true)
           context.login();
@@ -71,9 +87,19 @@ function Login({navigation}){
           </View>
 
           {(() => {
-              if (isLogin == false){
+              if (isLogin == true){
                   return (
-                      <Text style = {{backgroundColor: 'yellow'}}>Usuario no encontrado</Text>
+                      <Text style = {{backgroundColor: 'yellow'}}>Logeando</Text>
+                  )
+              }
+              
+              return null;
+            })()}
+          
+          {(() => {
+              if (context.token){
+                  return (
+                      <Text style = {{backgroundColor: 'yellow'}}>Logeado</Text>
                   )
               }
               
@@ -100,11 +126,10 @@ function Login({navigation}){
                 />
           <View>
             <Button  
-              type="button" 
-              title="Login"
+              mode={"contained"}
               onPress= {handleSubmit} 
               //disabled={isDisabled}
-              >
+              >Login
               </Button>
           </View> 
         </SafeAreaView>

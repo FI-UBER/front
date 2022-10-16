@@ -10,6 +10,12 @@ export function currentSession () {
 
 export function UserProvider({ children }) {
   let [user, setUser] = useState(false);
+  const [token, setToken] = useState('')
+
+  function setToken_(token_) {
+    setToken(token_);
+    console.log('token')
+  }
 
   function login() {
     setUser(true);
@@ -20,7 +26,7 @@ export function UserProvider({ children }) {
     setUser(false);
     console.log('logout')
   }
-  return <UserContext.Provider value={{ user, login, logout }}>{children}</UserContext.Provider>;
+  return <UserContext.Provider value={{ user, token, login, logout, setToken_ }}>{children}</UserContext.Provider>;
 }
 
 export function WithSession ({children}) {

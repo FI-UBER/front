@@ -26,10 +26,6 @@
 
 - npm i @expo/vector-icons
 
-*BUTTON TAB DE CEL*
-
-- npm install @react-navigation/bottom-tabs
-
 *MAPS*
 
 - npx expo install react-native-maps
@@ -55,6 +51,16 @@
 
 *REACT SPRING*
 - npm install react-spring
+
+*FORM*
+
+- npm install react-native-paper@5.0.0-rc.6
+
+- npm install react-native-paper-form-builder  
+
+*FIREBASE*
+
+- npx expo install firebase
 
 Asi debe quedar babel.config
 
@@ -86,6 +92,8 @@ Poner esto al ppio de index.js
 import 'react-native-gesture-handler';
 
 expo install @react-native-async-storage/async-storage
+
+
 
 ### Ejecucion 
 
