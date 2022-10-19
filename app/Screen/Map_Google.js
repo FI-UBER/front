@@ -7,7 +7,8 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import {GOOGLE_API_KEY} from '@env'
 import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
-import price from "./service2"
+import price_trip from "./service2"
+
 
 export default function Map_Google({navigation}) {
   const context = currentSession();
@@ -90,16 +91,36 @@ function fitMapToOriginDestiny() {
     )();
   }, [isFocused]);
 
-  //llamada al api de viajes para precio en service2
-  const asasap = async()=>{
-    const distance=41;
-      try {
-        console.log("price")
-        //const response = await price(distance)
-        Alert.alert("precio")
-    } catch (e) {
-        console.log(e.message)
-    }
+
+
+
+
+  //llamada al api de viajes para precio
+  const GetPrice = async()=>{
+      const { price }  = await price_trip(distance);
+      Alert.alert("Precio del viaje: ", price.toString());
+      console.log(price);
+    // let distance=41;
+    //  try{ 
+    //     await fetch(`https://trips-fiuber.herokuapp.com/`, {
+    //       method: 'GET', 
+    //       headers: {'Content-Type': 'application/json',
+    //       'Accept': 'application/json'}}
+    //     )
+    //    // .then(response => response.json)
+    //     .then(data => console.log(data))
+    // } catch (e) {
+    //     console.log(e.message)
+    // }
+  //   try {
+  //   await axios.get('http://127.0.0.1:7777/')
+  //   .then(response => response.json)
+  //   .then(data => console.log(data))
+  //   }
+  // catch(error) {
+  //   console.log(error.message);
+  // };
+
 
   }
   //Hook
@@ -276,7 +297,7 @@ function fitMapToOriginDestiny() {
                 style={{padding:20}}
                 type="button" 
                 title="Precio del viaje"
-                onPress= {asasap}>
+                onPress= {GetPrice}>
               </Button>
             </View> 
     </SafeAreaView>

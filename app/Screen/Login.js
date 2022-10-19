@@ -47,36 +47,37 @@ function Login({navigation}){
 
     const handleSubmit = async()=>{
 
-    //   try {
-    //     setIsLogin(true)
-    //     console.log({email, password})
-    //     const { token } = await login({ email, password })
-    //     setToken(token)
-    //     navigation.navigate('Home Login')
-    // } catch (e) {
-    //     setError(e.message)
-    // }
+      try {
+        setIsLogin(true)
+        console.log({email, password})
+        const { token } = await login({ email, password })
+        setToken(token)
+        context.login();
+        navigation.navigate('Home Login')
+    } catch (e) {
+        setError(e.message)
+    }
     
-      if (email!=null & password!=null){
-        if (email.length!=0 & password.length!=0){
-          console.log('Logeado');
-          setIsLogin(true)
-          context.login();
-          setProfile()
-          return(  
-             navigation.navigate("Home Login")
-          )
-        }
-        else{
-          console.log('No Logeado');
-          setIsLogin(false)
-        } 
-      }
-      else{
-        console.log('No Logeado');
-        setIsLogin(false)
+      // if (email!=null & password!=null){
+      //   if (email.length!=0 & password.length!=0){
+      //     console.log('Logeado');
+      //     setIsLogin(true)
+      //     context.login();
+      //     setProfile()
+      //     return(  
+      //        navigation.navigate("Home Login")
+      //     )
+      //   }
+      //   else{
+      //     console.log('No Logeado');
+      //     setIsLogin(false)
+      //   } 
+      // }
+      // else{
+      //   console.log('No Logeado');
+      //   setIsLogin(false)
       
-      }
+      // }
     }
     
     return(
