@@ -1,13 +1,16 @@
 import React from "react";
-import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Button, Alert} from 'react-native';
+import { Image, StyleSheet, Text, View, TouchableOpacity, SafeAreaView, Alert} from 'react-native';
+import {Button} from 'react-native-paper'
 import CAR from '../assets/18-yellow-flying-car.webp'
 //import SelectList from 'react-native-dropdown-select-list' //to_do agregar a readme
 import ProfileIconSelectList from '../components/atoms/ProfileIconSelectList'
-import SelectUser from './SearchUser'
+import {alerts} from '../components/Alert'
 import { useNavigation } from '@react-navigation/native';
+import {currentSession} from '../context'
+import {schedulePushNotification} from '../components/Noficationfunctions'
 
 function Home_Login({navigation})  {
-    const Nav = useNavigation();
+    const context = currentSession();
         
     return(
         <SafeAreaView style={styles.container}>
@@ -26,25 +29,51 @@ function Home_Login({navigation})  {
                 </Text>
             </View>
             <View>
-            <Button 
-                onPress={() => {console.log("apretado Profile");navigation.navigate("Profile");}}
-                title="Mi perfil" 
-                     />
+                <Button  
+                    mode={"contained"}
+                    onPress={() => {console.log("apretado Profile");navigation.navigate("Profile");}} 
+                    >Mi perfil
+                </Button>
             </View>
             
             <ProfileIconSelectList/>
-
-            <View>
-                <Button
-                    title = "Realizar un viaje"
-                    onPress = {() => {console.log('viaje');navigation.navigate("Realizar Viaje");}}>
-                </Button>
             
+            {(() => {
+                if (context.passenger){
+                    return (
+                        <View>
+                            <Button
+                                mode={"contained"}
+                                onPress={() => {console.log('viaje');navigation.navigate("Realizar Viaje");}}
+                                >Realizar un viaje
+                            </Button>
+                        </View>
+                    )
+                }
+                else{
+                    return(
+                        <View>
+                            <Button
+                                mode={"contained"}
+                                onPress={() => {console.log('Buscar pasajero');navigation.navigate("Search Screen");}}
+                                >Search Screen
+                            </Button>
+                        </View>
+                )}
+              }
+              
+            )()}
+             <View>
                 <Button
-                    title = "Buscar un usuario"
-                    onPress = {() => {console.log('Buscar Usuario');navigation.navigate("SearchUser");}} >
+                    mode={"contained"}
+                    onPress={() => {
+                        const text ='uid :'+context.uid+'\n'+'trip_id: '+context.trip_id+'\n'+'Soy '+ (context.passenger ? 'Pasajero':'Chofer');
+                        alerts("Datos",text)
+                        
+                        //schedulePushNotification("Hola","este es una prueba","Profile")
+                    }}
+                    >Datos
                 </Button>
-                
             </View>
         </SafeAreaView>
     );

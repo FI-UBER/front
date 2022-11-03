@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Pressable, Text, View, StyleSheet,Dimensions, Alert, Button, TextInput, SafeAreaView } from 'react-native';
+import { Pressable, Text, View, StyleSheet,Dimensions, Alert, TextInput, SafeAreaView } from 'react-native';
 import * as Location from 'expo-location';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
@@ -7,7 +7,9 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import {GOOGLE_API_KEY} from '@env'
 import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
-import price_trip from "./service2"
+import {price_trip, create_trip} from "../components/trip_api_endpoint"
+import {Button} from 'react-native-paper';
+import {alerts} from '../components/Alert'
 
 
 export default function Map_Google({navigation}) {
@@ -15,6 +17,9 @@ export default function Map_Google({navigation}) {
   //const Nav = useNavigation();
   const [isFocused, setFocus] = React.useState(false)
   const [distance, setDistance] = React.useState(0)
+
+  // const [precioviaje, setPrecioviaje] = React.useState(0)
+
 
   const [_position, setPos] = React.useState({
     //Casa Rosada como primer origen
@@ -43,7 +48,7 @@ export default function Map_Google({navigation}) {
   });
 
   const LatLngDestiny = (lat, long) =>{
-    setDestiny({...origin,latitude: lat, longitude: long})
+    setDestiny({...destiny,latitude: lat, longitude: long})
   }
 
   const mapRef = React.createRef();
@@ -64,6 +69,10 @@ function fitMapToOriginDestiny() {
   }
 
 
+  useEffect(() => {
+    console.log(context.getTrip_id())
+
+  }, [context.trip_id]);
 
   //Hook
   useEffect(() => {
@@ -76,9 +85,9 @@ function fitMapToOriginDestiny() {
       else{
         try {
           const location = await Location.getCurrentPositionAsync({});
+        //  console.log(location.coords.latitude, location.coords.longitude)
           setPos({..._position,latitude: location.coords.latitude, longitude: location.coords.longitude});
           if (location.latitude === null && location.longitude === null) {
-          //Alert.alert('Se debe poder localizar tu posicion. Enciende tu ubicacion');
             navigation.navigate("Home Login")
           }
         } catch (error) {
@@ -87,46 +96,40 @@ function fitMapToOriginDestiny() {
         }
       }
     }
+
+    //
     }
     )();
   }, [isFocused]);
 
+//llamadas a api de viajes
+//---------------------------------------------
+  const query_create_trip = async(price)=>{
+    const {trip_id} = await create_trip(context.uid, price);
+    if (trip_id.toString() ==="An error occurred"){
+        alerts("Trip Creado", "Usuario "+context.uid+" ya tiene un viaje en espera.");
+        console.log(context.uid, "ya creo un trip.")
+        navigation.navigate("Home Login")
+    }
+    else{
+      context.setTrip_id(trip_id.toString())
+      console.log("Esperando viaje, trip:", trip_id.toString());
+    }
+    
+  }
 
-
-
-
-  //llamada al api de viajes para precio
   const GetPrice = async()=>{
       const { price }  = await price_trip(distance);
-      Alert.alert("Precio del viaje: ", price.toString());
-      console.log(price);
-    // let distance=41;
-    //  try{ 
-    //     await fetch(`https://trips-fiuber.herokuapp.com/`, {
-    //       method: 'GET', 
-    //       headers: {'Content-Type': 'application/json',
-    //       'Accept': 'application/json'}}
-    //     )
-    //    // .then(response => response.json)
-    //     .then(data => console.log(data))
-    // } catch (e) {
-    //     console.log(e.message)
-    // }
-  //   try {
-  //   await axios.get('http://127.0.0.1:7777/')
-  //   .then(response => response.json)
-  //   .then(data => console.log(data))
-  //   }
-  // catch(error) {
-  //   console.log(error.message);
-  // };
-
-
+      //setPrecioviaje(price);
+      //alerts("Precio del viaje", price.toString());
+      return price;
   }
+//--------------------------------------------------
+
   //Hook
   useFocusEffect(
     React.useCallback(() => {
-   //   alert('Screen was focused');
+//      alert('Screen was focused');
       setFocus(true);
       return () => {
      //   alert('Screen was unfocused');
@@ -137,13 +140,14 @@ function fitMapToOriginDestiny() {
 
   return (
     <SafeAreaView style={styles.container}>
-            <Button
-              style={{padding:50, position: 'relative'}}
-              type="button" 
-              title="Mi posicion como Origen"
-              onPress= {MyPosition}>
-            </Button>
-            <View >
+            <View>
+              <Button  
+                mode={"contained"}
+                onPress= {MyPosition} 
+                >Origen
+              </Button>
+            </View>
+            {/* <View >
               { <Text >Origen</Text> }
             </View>
               <View style={ styles.google}>
@@ -198,7 +202,7 @@ function fitMapToOriginDestiny() {
                   },
                 }}
                 />
-              </View>
+              </View> */}
               <View>
               <Text >Destino </Text> 
               </View>
@@ -293,29 +297,41 @@ function fitMapToOriginDestiny() {
                 </MapViewDirections>
             </MapView>
             <View>
-              <Button
-                style={{padding:20}}
-                type="button" 
-                title="Precio del viaje"
-                onPress= {GetPrice}>
+              <Button  
+                mode={"contained"}
+                onPress={()=> {
+                  GetPrice().then((result) => {
+                    console.log("Precio del viaje", result)
+                    alerts("Precio del viaje", result.toString());})
+                  }
+                } 
+                >Precio
               </Button>
-            </View> 
+            </View>
+            <View>
+              <Button  
+                mode={"contained"}
+                onPress={() => {
+                  GetPrice().then((result) => {
+                    query_create_trip(result);
+                    navigation.navigate("Search Screen")})
+                  }
+                }
+                >Buscar chofer
+              </Button>
+            </View>
     </SafeAreaView>
     );
-
-
-
 
   function MyPosition() {
     console.log('My Position');
     console.log(_position.latitude);
     console.log(_position.longitude);
-    setOrigin({...origin,latitude: _position.latitude, longitude: _position.longitude});
+    LatLngOrigin(_position.latitude, _position.longitude);
+    //setOrigin({...origin,latitude: _position.latitude, longitude: _position.longitude});
     fitMapToOriginDestiny();
     }
   }
-
-
 
 
 const styles = StyleSheet.create({

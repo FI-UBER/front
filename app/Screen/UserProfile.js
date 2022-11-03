@@ -91,7 +91,7 @@ function UserProfile ( {navigation} ) {
                         </TouchableOpacity>
                     </View>
                 </View>
-
+{/* 
                 <View style={styles.item}>
                     <View style={styles.iconContent}>
                         <Image style={styles.icon} source={config}/>
@@ -103,7 +103,7 @@ function UserProfile ( {navigation} ) {
                             <Text style={styles.info}>Configuración</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </View> */}
 
             </View>
         </View>

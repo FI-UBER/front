@@ -6,8 +6,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import FIFIUBA from '../assets/FIFIUBA.png'
 import {currentSession} from '../context'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
-import login from "./service"
+import {login} from "../components/RegisterUser"
+import  {FirebaseError}  from "../components/FirebaseError";
 
 const ref = React.createRef()
 
@@ -16,11 +16,12 @@ function Login({navigation}){
     const [email, UserID] = React.useState(null);
     const [password, Pass] = React.useState(null);
     const [error, setError] = useState('')
-    const [token, setToken] = useState('')
     const [isLogin, setIsLogin] = React.useState(null);
 
-    const setProfile = async() => {
-        await AsyncStorage.setItem('userprofile', JSON.stringify({'name': 'nombre', 'lastName': 'apellido', 'email': 'email@email.com', 'city': 'Buenos Aires', 'country': 'Argentina'}));
+    const passenger=true;
+
+    const setProfile = async(email) => {
+        await AsyncStorage.setItem('userprofile', JSON.stringify({'name': 'nombre', 'lastName': 'apellido', 'email': email, 'city': 'Buenos Aires', 'country': 'Argentina'}));
         //por ahora hardcodeado, hay que obtener los datos del microservicio users
     }
 
@@ -43,43 +44,48 @@ function Login({navigation}){
         navigation.navigate("Home Login")
         )
       }
+
+
     }, []);    
 
     const handleSubmit = async()=>{
 
       try {
-        setIsLogin(true)
-        console.log({email, password})
-        const { token } = await login({ email, password })
-        setToken(token)
-        context.login();
-        navigation.navigate('Home Login')
-    } catch (e) {
-        setError(e.message)
+       //Pasajero
+        if (passenger){
+          context.setPassenger_()
+        }
+        //Conductor
+        else{
+          context.setDriver()
+        }
+
+      } catch (e) {
+          setError(e.message)
+      }
+      //Logeo con firebase
+
+      login(email, password)
+        .then((r) => {
+        switch (r) {
+          case null:
+            break;
+          default: 
+            context.login(r)
+            setIsLogin(true)
+            setProfile(email)
+            navigation.navigate("Home Login")
+            break;
+          }   
+
+        })
+        .catch((error) => {
+          const errorMessage = error.message;
+          setIsLogin(false)
+          FirebaseError(errorMessage)
+        });
     }
-    
-      // if (email!=null & password!=null){
-      //   if (email.length!=0 & password.length!=0){
-      //     console.log('Logeado');
-      //     setIsLogin(true)
-      //     context.login();
-      //     setProfile()
-      //     return(  
-      //        navigation.navigate("Home Login")
-      //     )
-      //   }
-      //   else{
-      //     console.log('No Logeado');
-      //     setIsLogin(false)
-      //   } 
-      // }
-      // else{
-      //   console.log('No Logeado');
-      //   setIsLogin(false)
-      
-      // }
-    }
-    
+
     return(
         <SafeAreaView style={styles.container}>
           
@@ -98,9 +104,9 @@ function Login({navigation}){
             })()}
           
           {(() => {
-              if (context.token){
+              if (error){
                   return (
-                      <Text style = {{backgroundColor: 'yellow'}}>Logeado</Text>
+                      <Text style = {{backgroundColor: 'yellow'}}>{error};</Text>
                   )
               }
               

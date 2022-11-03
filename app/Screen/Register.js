@@ -1,22 +1,23 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { StyleSheet, Text, View, TouchableOpacity, SafeAreaView, ScrollView, Alert} from 'react-native';
-import FIFIUBA from '../assets/FIFIUBA.png'
 import {FormBuilder} from 'react-native-paper-form-builder';
 import {useForm} from 'react-hook-form';
 import {Button} from 'react-native-paper'
 import {currentSession} from '../context'
-import  app  from "../firebase"
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import  {FirebaseError}  from "../components/FirebaseError";
+import {RegisterUser} from "../components/RegisterUser"
 
 console.disableYellowBox = true;
 // add this is main component of react native application
 
 
+
+
 function Register({navigation}) {
     const context = currentSession();
+    
 
-
-    const {control, setFocus, handleSubmit} = useForm({
+const {control, setFocus, handleSubmit} = useForm({
       defaultValues: {
         email: '',
         password: '',
@@ -59,30 +60,32 @@ function Register({navigation}) {
                   label: 'Password',
                 },
               },
-            ]}
+            ]}s
           />
           <Button
             mode={'contained'}
             onPress={handleSubmit((data) => {
               //console.log('email', data.email);
-              //Alert.alert("Registrado");
-              //context.login(data.name);
-              const auth = getAuth(app);
-              createUserWithEmailAndPassword(auth, data.email, data.password)
-                .then((userCredential) => {
-                  // Signed in
-                  const user = userCredential.user;
-                  console.log(user)
-                  // ...
+              RegisterUser(data.email, data.password)
+                .then((r) => {
+                switch (r) {
+                  case null: 
+                    break;
+                  default: 
+                    console.log('uid:',r)
+                    Alert.alert("Usuario creado. Ya puedes logearte")
+                    navigation.navigate("Login")
+                    break;
+              }   
+
                 })
                 .catch((error) => {
-                  const errorCode = error.code;
                   const errorMessage = error.message;
-                  Alert.alert(errorMessage)
-                  //..
-               });
-             // navigation.navigate("Home Login")
-            })}>
+                  FirebaseError(errorMessage)
+                  
+                });
+              }
+            )}>
             Registrarse
           </Button>
         </ScrollView>

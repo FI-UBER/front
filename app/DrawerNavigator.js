@@ -2,7 +2,7 @@ import React, { useState, useEffect }  from 'react';
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList, DrawerItem } from "@react-navigation/drawer"
 import { NavigationContainer } from '@react-navigation/native';
 
-import SettingsScreen from "./Screen/Settings"
+import Notification from './components/Notification';
 import Profile  from "./Screen/UserProfile";
 import Viajar from "./Screen/Map_Google";
 import Home_Login from './Screen/Home_Login';
@@ -12,23 +12,24 @@ import MyTrips from "./Screen/MyTrips"
 import MyConversations from "./Screen/MyConversations"
 import Configuration from "./Screen/Configuration"
 import  Register  from "./Screen/Register";
+import Waiting from './Screen/Waiting/Waiting';
+import Route_Map from './Screen/Waiting/Route_map';
+import {logout} from './components/RegisterUser'
 
 const Drawer = createDrawerNavigator()
 import {currentSession} from './context'
-import { Alert } from 'react-native-web';
 
 export default function DrawerNavigator() {
     const context = currentSession();
     const [showLogin, setLogin] = React.useState("none");
     const [showNotLogin, setNotLogin] =  React.useState("flex");
 
-
-
     useEffect(() => {
         //console.log("DrawerNavigator");
         if (context.user) {
             setLogin("flex");
-            setNotLogin("none");    
+            setNotLogin("none");
+    
         } else {
             setLogin("none");
             setNotLogin("flex");
@@ -46,7 +47,10 @@ export default function DrawerNavigator() {
                     return (
                     <DrawerContentScrollView {...props}>
                         <DrawerItemList {...props} />
-                        <DrawerItem label="Logout" onPress={() => context.logout()} />
+                        <DrawerItem label="Logout" onPress={() => {
+                            logout()
+                            context.logout()
+                        }} />
                     </DrawerContentScrollView>
                     )
                 }}
@@ -56,6 +60,7 @@ export default function DrawerNavigator() {
                     component={Login}
                     options ={{
                         
+                        headerLeftLabelVisible: true,
                         drawerItemStyle: {
                             display: showNotLogin,
                         }
@@ -89,25 +94,91 @@ export default function DrawerNavigator() {
                         },
                     }}>
                 </Drawer.Screen>
-                <Drawer.Screen 
-                    name = "Settings" 
-                    component={SettingsScreen}>
-                </Drawer.Screen>
-                <Drawer.Screen 
-                    name = "Realizar Viaje" 
-                    component={Viajar}
-                    options={{
-                        drawerItemStyle: {
-                            display: showLogin,
-                        },
-                    }}>
-                </Drawer.Screen>
+
+                {(() => {
+                if (!context.user ){
+                    return (
+                        <React.Fragment>
+                        <Drawer.Screen 
+                        name = "Realizar Viaje" 
+                        component={Viajar}
+                        options={{
+                            drawerItemStyle: {
+                                display: "none",
+                            },
+                        }}>
+                        </Drawer.Screen>
+
+                        <Drawer.Screen 
+                            name = "Search Screen" 
+                            component={Waiting}
+                            options={{
+                                drawerItemStyle: {
+                                    display: 'none',
+                                },
+                            }}>
+                        </Drawer.Screen>
+                    </React.Fragment>
+                    )
+                }
+                else {
+                    if (context.passenger )
+                    {
+                        return (
+                            <React.Fragment>
+                            <Drawer.Screen 
+                            name = "Realizar Viaje" 
+                            component={Viajar}
+                            options={{
+                                drawerItemStyle: {
+                                    display: "flex",
+                                },
+                            }}>
+                            </Drawer.Screen>
+                            <Drawer.Screen 
+                                name = "Search Screen" 
+                                component={Waiting}
+                                options={{
+                                    drawerItemStyle: {
+                                        display: 'none',
+                                    },
+                                }}>
+                            </Drawer.Screen>
+                            </React.Fragment>
+                        )
+                        }
+                        else {
+                        return (
+                            <React.Fragment>
+                                <Drawer.Screen 
+                                    name = "Search Screen" 
+                                    component={Waiting}
+                                    options={{
+                                        drawerItemStyle: {
+                                            display: 'flex',
+                                        },
+                                    }}>
+                                </Drawer.Screen>
+                                <Drawer.Screen 
+                                    name = "Realizar Viaje" 
+                                    component={Viajar}
+                                    options={{
+                                        drawerItemStyle: {
+                                            display: "none",
+                                        },
+                                    }}>
+                                </Drawer.Screen>
+                            </React.Fragment>
+                            )
+                        }
+                    }
+                 })()}
                 <Drawer.Screen 
                     name = "SearchUser" 
                     component={SearchUser}
                     options={{
                         drawerItemStyle: {
-                            display: showLogin,
+                            display: "none",
                         },
                     }}>
                 </Drawer.Screen>
@@ -138,6 +209,25 @@ export default function DrawerNavigator() {
                         },
                     }}>
                 </Drawer.Screen>
+                <Drawer.Screen 
+                    name = "Route Map" 
+                    component={Route_Map}
+                    options={{
+                        drawerItemStyle: {
+                            display: "flex",
+                        },
+                    }}>
+                </Drawer.Screen>
+                {/* <Drawer.Screen 
+                    name = "Notification" 
+                    component={Notification}
+                    options={{
+                        drawerItemStyle: {
+                            display: "flex",
+                        },
+                    }}>
+                </Drawer.Screen> */}
+
             </Drawer.Navigator>
         </NavigationContainer>
       );

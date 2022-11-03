@@ -16,10 +16,14 @@
     "@react-navigation/native-stack": "^6.8.0",
     "axios": "^1.1.2",
     "expo": "^46.0.10",
+    "expo-device": "~4.3.0",
     "expo-location": "~14.3.0",
+    "expo-notifications": "~0.16.1",
+    "expo-permissions": "^13.2.0",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
     "firebase": "^9.12.1",
+    "pg": "^8.8.0",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-hook-form": "^7.37.0",
@@ -45,5 +49,4 @@
   },
   "private": true,
   "proxy": "http://localhost:7777"
-  
 }
