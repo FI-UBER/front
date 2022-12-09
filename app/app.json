@@ -7,8 +7,14 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/FIFIUBA.png",
-      "backgroundColor": "#193752"
+      "image": "./assets/poweron.png",
+      "backgroundColor": "#ffffff"
+    },
+    "notification": 
+    {
+      "icon": "./assets/example.png",
+      "color": "#ffffff",
+      "androidMode": "default"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -28,6 +34,16 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/example.png",
+          "color": "#ffffff"
+        }
+      ]
+    ],
+
   }
 }

@@ -93,6 +93,8 @@ import 'react-native-gesture-handler';
 
 expo install @react-native-async-storage/async-storage
 
+npx expo install expo-av
+
 
 
 ### Ejecucion 
