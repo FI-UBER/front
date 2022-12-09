@@ -17,6 +17,7 @@ export default function Map_Google({navigation}) {
   //const Nav = useNavigation();
   const [isFocused, setFocus] = React.useState(false)
   const [distance, setDistance] = React.useState(0)
+  var trip_id_=null;
 
   // const [precioviaje, setPrecioviaje] = React.useState(0)
 
@@ -68,12 +69,6 @@ function fitMapToOriginDestiny() {
     });
   }
 
-
-  useEffect(() => {
-    console.log(context.getTrip_id())
-
-  }, [context.trip_id]);
-
   //Hook
   useEffect(() => {
     (async () => {
@@ -88,11 +83,11 @@ function fitMapToOriginDestiny() {
         //  console.log(location.coords.latitude, location.coords.longitude)
           setPos({..._position,latitude: location.coords.latitude, longitude: location.coords.longitude});
           if (location.latitude === null && location.longitude === null) {
-            navigation.navigate("Home Login")
+            navigation.navigate("Home")
           }
         } catch (error) {
           Alert.alert('Se debe poder localizar tu posicion. Enciende tu ubicacion');
-          navigation.navigate('Home Login')
+          navigation.navigate('Home')
         }
       }
     }
@@ -102,41 +97,45 @@ function fitMapToOriginDestiny() {
     )();
   }, [isFocused]);
 
+    //Hook
+    useFocusEffect(
+      React.useCallback(() => {
+  //      alert('Screen was focused');
+        setFocus(true);
+        return () => {
+       //   alert('Screen was unfocused');
+          setFocus(false)
+        };
+      }, [])
+    );
+
 //llamadas a api de viajes
 //---------------------------------------------
   const query_create_trip = async(price)=>{
-    const {trip_id} = await create_trip(context.uid, price);
-    if (trip_id.toString() ==="An error occurred"){
-        alerts("Trip Creado", "Usuario "+context.uid+" ya tiene un viaje en espera.");
+    await create_trip(context.uid, price).then((result)=>{
+      trip_id_ = (result.trip_id).toString();
+      console.log(trip_id_);
+      if (trip_id_ ==="An error occurred"){
+        //alerts("Trip Creado", "Usuario "+context.uid+" ya tiene un viaje en espera.");
         console.log(context.uid, "ya creo un trip.")
-        navigation.navigate("Home Login")
-    }
-    else{
-      context.setTrip_id(trip_id.toString())
-      console.log("Esperando viaje, trip:", trip_id.toString());
-    }
+        trip_id_=null;
+      }
+      else{
+        console.log("Esperando viaje, trip:", trip_id_);
+      }
+      
+        
+    })
     
   }
 
   const GetPrice = async()=>{
       const { price }  = await price_trip(distance);
-      //setPrecioviaje(price);
-      //alerts("Precio del viaje", price.toString());
       return price;
   }
 //--------------------------------------------------
 
-  //Hook
-  useFocusEffect(
-    React.useCallback(() => {
-//      alert('Screen was focused');
-      setFocus(true);
-      return () => {
-     //   alert('Screen was unfocused');
-        setFocus(false)
-      };
-    }, [])
-  );
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -312,11 +311,20 @@ function fitMapToOriginDestiny() {
               <Button  
                 mode={"contained"}
                 onPress={() => {
-                  GetPrice().then((result) => {
-                    query_create_trip(result);
-                    navigation.navigate("Search Screen")})
-                  }
-                }
+                  GetPrice().then(async(result) => {
+  
+                    await query_create_trip(result)
+                    .then(()=>{
+                      if (trip_id_ === null){
+                        navigation.navigate("Home")
+                      }
+                      else {
+                        navigation.navigate("Searching",{
+                          id: trip_id_,})
+                      }
+                    })
+                  })                   
+                }}
                 >Buscar chofer
               </Button>
             </View>

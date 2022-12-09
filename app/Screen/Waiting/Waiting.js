@@ -2,49 +2,49 @@
 import {Text, View, StyleSheet, SafeAreaView, Pressable} from 'react-native';
 import { Image, Alert} from 'react-native';
 import React, { useEffect, useState}  from 'react';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import WAITING from '../../assets/waiting.gif'
 import {currentSession} from '../../context'
 import {Button} from 'react-native-paper'
-import {alerts, AsyncAlert} from '../../components/Alert'
+import { deposit } from '../../components/wallet_endpoint';
 import { search_trip, accept_driver, client_has_a_driver } from '../../components/trip_api_endpoint';
 import {schedulePushNotification} from '../../components/Noficationfunctions';
-import { async } from '@firebase/util';
 var bool= false;
 var buclefunction=null;
-
 
 function Waiting({navigation}) {
    const context = currentSession();
    const [msg,setMsg] = useState("")
+   const [id_,setid] = useState("");
+   var Olat_, Olng_, Dlat_, Dlng_, price_;
+   
+   //Para recibir parametros
+   const route = useRoute();
 
   const NoLoop = () => {
     clearInterval(buclefunction)
     buclefunction = null;
     bool = false;
     if (context.passenger) {
-      setMsg("Buscando Choferes...")
+      setMsg("Searching Driver...")
     }
     else{
-      setMsg("Buscando Pasajeros...")
+      setMsg("Searching Client...")
     }
   }
 
-  const bucle1 =()=>{
-    console.log("bucle cliente inicio");
+  const loopPassenger = (id_trip) => {
     buclefunction = null;
     bool=true;
     
     if(buclefunction==null && (bool)){
       //Busco al entrar, cada 5 sec
-      buclefunction = setInterval(Client_with_driver,5000);
-      
+      buclefunction = setInterval(function() {Client_with_driver(id_trip)}, 5000);
+     
      }
   }
 
-
-  const bucle =()=>{
-    console.log("bucle driver inicio");
+  const loopDriver =()=>{
     buclefunction = null;
     bool=true;
     
@@ -59,31 +59,34 @@ function Waiting({navigation}) {
     //no busco en loop 
     NoLoop();
     //quito id o cancelo busqueda
-    context.dropTrip_id();
+    
     if(context.passenger){
-      console.log("Trip",context.trip_id ,"cancelado")
+      console.log("Trip",id_ ,"cancelado")
     }
     else{
       console.log("Busqueda de viaje cancelado")
     }
-    navigation.navigate('Home Login')
+    
+   navigation.navigate('Home')
   }
 
-
-const Client_with_driver =async()=>{
+const Client_with_driver =async(id_trip)=>{
   try {
-    console.log(context.getTrip_id())
-    const {driver_status} = await client_has_a_driver(context.getTrip_id());
+    const {driver_status} = await client_has_a_driver(id_trip);
     NoLoop();
     console.log(driver_status)
+    console.log(price_)
     if (driver_status == "driver_found"){
-      setMsg("Choferes Encontrado")
-      alerts("Exito","Tu viaje ya tiene conductor")
+      schedulePushNotification("Driver found", "Your trip has already found a driver and he is heading to your position.", "Searching")
+      setMsg("Driver found")
+      //alerts("Success","Your trip has already found a driver")
+       navigation.navigate("Route Map", 
+       {id: id_trip, Olat:Olat_, Olng:Olng_, Dlat: Dlat_, Dlng: Dlng_, price: price_})
     }
     else{
-      alerts("No Exito","Tu viaje aun no tiene conductor")
-      setMsg("Buscando Choferes...")
-      bucle1()
+      //alerts("No Exito","Tu viaje aun no tiene conductor")
+      setMsg("Searching Driver...")
+      loopPassenger(id_trip)
     }
     
   } catch (error) {
@@ -92,67 +95,49 @@ const Client_with_driver =async()=>{
   }
 }
 
-const Driver_Accepter = async(trip_id) => {
-  try {
-    const { status }  = await accept_driver(trip_id, context.uid);
-    context.setTrip_id(trip_id);
-    setMsg("Chofer Aceptado");
-    console.log("status:",status);
-    //salir
-    navigation.navigate("Route Map");
-  
-  } catch (error) {
-    console.log(error.message);
-    setMsg(error.message);
-  }
-
-  
-}
-
  const Driver_Search= async()=>{
   console.log("Busco cada 5 sec, soy chofer...");
   try {
-      const { price, trip_id }  = await search_trip();
-      setMsg("Viaje encontrado");
-      console.log("viaje con precio:",price,"y trip_id:", trip_id);
-      const text ='precio :'+price+'\n'+'trip_id: '+trip_id+'\n';
+      const { trip_price, trip_id,lat, long, dest_lat, dest_long }  = await search_trip();
+      setMsg("Foundit trip");
+      console.log("viaje con precio:",trip_price,"y trip_id:", trip_id);
+      const text ='Price of the trip :'+trip_price+'\n';
       NoLoop();
-      schedulePushNotification("Viaje Encontrado", text, "Search Screen")
-      await AsyncAlert("Viaje encontrado",text)
-      .then(async(response)=>{  
-        if (response == true) {
-          Driver_Accepter(trip_id);
-        }
-        else{
-          bucle()
-          setMsg("Buscando otro viaje");
-        }
-      })
-      
+      schedulePushNotification("Foundit trip", text, "Route Map")
+      navigation.navigate("Trip_Found",{
+        id: trip_id, price: trip_price, Olat:lat, Olng:long, Dlat: dest_lat, Dlng: dest_long})
+    
   } catch (error) {
       console.log(error.message);
       setMsg(error.message);
   }
-
 }
 
 //Hook de Effect para buscar viajes o choferes
  useFocusEffect(   
-  React.useCallback(() => { 
-    if (context.passenger) {
-      setMsg("Buscando Choferes...")
-      bucle1();
-   }
-   else{
-      setMsg("Buscando Pasajeros...")
-      bucle();
+  React.useCallback(() => {
+
+    if (context.passenger) {    
+      var {id, Olat, Olng, Dlat, Dlng, price}= route.params
+      Olat_=Olat
+      Olng_=Olng
+      Dlat_=Dlat
+      Dlng_=Dlng
+      price_ = price
+      setid(id)
+      setMsg("Searching Driver...")
+      loopPassenger(id)
+    }
+    else{
+      setMsg("Searching Client...")
+      loopDriver();
     }
     return () => {
       //Solo busco en 1er plano
       NoLoop();
-   //   alert('Screen was unfocused');
+    //   alert('Screen was unfocused');
     };
-  }, [])
+  }, [route.params])
 );
 
 
@@ -164,10 +149,10 @@ const Driver_Accepter = async(trip_id) => {
         <Text style={styles.text}> {msg} </Text>
          <View>
             <Button  
-              mode={"contained"}
-              onPress= {cancelSearch} 
-              //disabled={isDisabled}
-              >Cancelar Busqueda
+              mode={"contained"} 
+              onPress= {cancelSearch}
+              buttonColor="red" 
+              >Cancel Search
             </Button>
          </View>
     </SafeAreaView>
@@ -180,6 +165,7 @@ const styles = StyleSheet.create({
       backgroundColor: "white",
       alignItems: 'center',
       justifyContent: 'center',
+      horizontalAlign: 'center',
     },
     text: {
         
