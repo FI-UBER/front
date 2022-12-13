@@ -7,7 +7,7 @@ import {GOOGLE_API_KEY} from '@env'
 import * as Location from 'expo-location';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { Fontisto } from '@expo/vector-icons';
-import {update_driver_pos, get_driver_pos, update_status, get_status} from '../../components/trip_api_endpoint'
+import {update_driver_pos, get_driver_pos, update_status, get_status, finish_trip_} from '../../components/trip_api_endpoint'
 import {currentSession} from '../../context'
 import {schedulePushNotification} from '../../components/Noficationfunctions';
 import {pay, deposit} from '../../components/wallet_endpoint'
@@ -85,7 +85,7 @@ function Route_Map({route, navigation}) {
         setUpdate(false)
         if (context.passenger){
           setPrice(price)
-          console.log("precio pasajero:",price)
+          console.log("precio pasajtero:",price)
           asdf();
           setMsg("Wait in your position for your driver to approach")
           
@@ -93,6 +93,7 @@ function Route_Map({route, navigation}) {
         else {
           setPrice(price)
           console.log("precio driver:",price)
+          setIn(false)
           setany(true)
           updatePos();
           setMsg("Go to the passenger's location")
@@ -133,6 +134,9 @@ const loopPassenger = (id_) => {
 const pos = async(id_) => {
   const {trip_status} = await get_status(id_)
 //  console.log("status: ",trip_status)
+  NoLoop();
+  const {position_lat, position_long} =await get_driver_pos(id_);  
+  setPos({..._position,latitude: position_lat, longitude: position_long});
   if (trip_status == "running"){
         //Aca pagar el viaje
         if (!Dopayment){
@@ -141,24 +145,23 @@ const pos = async(id_) => {
           await deposit(price_/1000)
           schedulePushNotification("Payment Made", "The cost of the trip has been debited from your Wallet", "Searching")
         }
-
+        loopPassenger(id_)
         setMsg("Trip in progress")
   }
-  const {position_lat, position_long} =await get_driver_pos(id_);
-  NoLoop();
-  if (trip_status == "complete"){
+  else if (trip_status == "completed"){
     Dopayment=false;
     setUpdate(true)
     setId('')
     setMsg('')
     setany(false)
-    setIn(falseResult)
+    setIn(false)
     setPrice(0)
-    navigation.navigate("Home")  
+    setPos({..._position,latitude: 0, longitude: 0});
+    navigation.navigate("Rating",{trip: id_})  
   }
- // console.log("posicion del driver para pasajero:",position_lat, position_long)
-  setPos({..._position,latitude: position_lat, longitude: position_long});
-  loopPassenger(id_)
+  else{
+    loopPassenger(id_)
+  }
 }
 
 const NoLoop = () => {
@@ -237,11 +240,19 @@ function button_start ()  {
 </View>
   )
 }
+
 async function init_trip(id){
   const {trip_updated_to} = await update_status(id);
   setMsg("Trip in progress")
  // console.log(trip_updated_to)
   trayecto(trip_lat,trip_lng)
+}
+
+async function finish_trip(id){
+  const {trip_status} = await finish_trip_(id);
+ // setMsg("Trip in progress")
+  console.log(trip_status)
+ // trayecto(trip_lat,trip_lng)
 }
 
 
@@ -257,8 +268,10 @@ function button_finish ()  {
         onPress={async() => {
           console.log("Se pago:", price_/1000)
           await pay(price_/1000)
+          finish_trip(id_)
           schedulePushNotification("Payment Receive", "The cost of the trip has been sending to your Wallet", "Searching")
-          navigation.navigate("Home")
+
+          navigation.navigate("Rating", {trip: id_})
         }} 
         >Finish Trip
   </Button>
@@ -364,11 +377,11 @@ const styles = StyleSheet.create({
       justifyContent:'center',
     //  backgroundColor:'blue',
   },
-  button: {
-    width:"50%",
-    height:"30%",
-    margin:30,
-},
+    button: {
+      width:"50%",
+      height:"30%",
+      margin:30,
+  },
 })
 
 export default Route_Map;

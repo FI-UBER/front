@@ -20,22 +20,23 @@ function Login({navigation}){
     const [password, Pass] = React.useState(null);
     const [error, setError] = useState('')
     const [isLogin, setIsLogin] = React.useState(null);
-
-    const setProfile = async(email, name, lastname, w_address, w_pKey) => {
+/////////////////////////////////////////////
+//Guardo datos de usuario en memoria
+    const setProfile = async(email, name, lastname, w_address, w_pKey, idProfile) => {
         await AsyncStorage.setItem('userprofile', JSON.stringify({'name': name,
          'lastName': lastname, 'email': email, 'city': 'Buenos Aires', 'country': 'Argentina',
-        'WalletAdress':w_address, 'WalletPrivateKey': w_pKey}));
+        'WalletAdress':w_address, 'WalletPrivateKey': w_pKey, 'idPic':idProfile}));
     }
 
     const getDataUser = async(email_, typeUser) => {
       await getData({email: email_, rol: typeUser}).then((data) =>{
-        console.log(data);
+       // console.log(data);
         context.login(data._id)
         
-        setProfile(email_, data.name, data.lastname, data.address, data.key)
+        setProfile(email_, data.name, data.lastname, data.address, data.key, data.idProfile)
       })
     }
-
+//////////////////////////////////////////
       
   useFocusEffect(
     React.useCallback(() => {

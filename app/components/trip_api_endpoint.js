@@ -32,9 +32,9 @@ const create_trip = async (id,price,Olat,Olng,Dlat,Dlng) => {
 }
 
 
-const search_trip = async () => {
+const search_trip = async (id) => {
     try {  
-        const response =await axios.get( `${TRIPS_URL}/search-trip` )
+        const response =await axios.get( `${TRIPS_URL}/search-trip/${id}` )
         return response.data;
     } catch (error) {
         const message = (error.response?.data?.error
@@ -127,5 +127,50 @@ const get_status = async (trip_id) => {
     }
 }
 
+const finish_trip_ = async (trip_id) => {
+    try {  
+        const response =await axios.post( `${TRIPS_URL}/trip/finish/${trip_id}`)
+        return response.data;
+    } catch (error) {
+        const message = (error.response?.data?.error
+            // || error.message
+            || 'Error')
+        //console.error(message);
+        throw new Error(message)
+    }
+}
 
-export {price_trip, create_trip, search_trip, accept_driver, client_has_a_driver, update_driver_pos, get_driver_pos, get_status, update_status};
+const getScoreUser = async (userId) => {
+    try {  
+        console.log(userId)
+        const response =await axios.get( `${TRIPS_URL}/score/${userId}`)
+        return response.data;
+    } catch (error) {
+        const message = (error.response?.data?.error
+             || error.message)
+            //|| 'Error')
+        //console.error(message);
+        throw new Error(message)
+    }
+}
+
+///trip/{trip_id}/qualify/{user_id}/score/{score}
+const ScoreAUser = async (user_id, trip_id, score) => {
+    try {  
+        const response =await axios.post( `${TRIPS_URL}/trip/${trip_id}/qualify/${user_id}/score/${score}`)
+        return response.data;
+    } catch (error) {
+        const message = (error.response?.data?.error
+             || error.message)
+            //|| 'Error')
+        //console.error(message);
+        throw new Error(message)
+    }
+}
+
+
+
+export {price_trip, create_trip, search_trip, accept_driver,
+        client_has_a_driver, update_driver_pos, get_driver_pos, 
+        get_status, update_status, finish_trip_, getScoreUser,
+        ScoreAUser};

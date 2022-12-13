@@ -218,7 +218,7 @@ const {control, setFocus, handleSubmit,watch} = useForm({
                       birthday:data.nacimiento,
                       rol:data.rol},
                        data.rol)                             
-                    Alert.alert("Usuario creado. Ya puedes logearte")
+                    Alert.alert("Account created. You can login ")
                     navigation.navigate("Login")
                     break;
                 }   

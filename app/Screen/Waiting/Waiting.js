@@ -17,6 +17,8 @@ function Waiting({navigation}) {
    const [msg,setMsg] = useState("")
    const [id_,setid] = useState("");
    var Olat_, Olng_, Dlat_, Dlng_, price_;
+   var tripAvoid;
+
    
    //Para recibir parametros
    const route = useRoute();
@@ -98,7 +100,8 @@ const Client_with_driver =async(id_trip)=>{
  const Driver_Search= async()=>{
   console.log("Busco cada 5 sec, soy chofer...");
   try {
-      const { trip_price, trip_id,lat, long, dest_lat, dest_long }  = await search_trip();
+    console.log(tripAvoid)
+      const { trip_price, trip_id,lat, long, dest_lat, dest_long }  = await search_trip(tripAvoid);
       setMsg("Foundit trip");
       console.log("viaje con precio:",trip_price,"y trip_id:", trip_id);
       const text ='Price of the trip :'+trip_price+'\n';
@@ -129,6 +132,8 @@ const Client_with_driver =async(id_trip)=>{
       loopPassenger(id)
     }
     else{
+      var {idAvoid}= route.params
+      tripAvoid = idAvoid
       setMsg("Searching Client...")
       loopDriver();
     }

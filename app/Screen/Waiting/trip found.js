@@ -119,7 +119,7 @@ export default function Trip_Found ({route, navigation})  {
                   setOlng("")
                   setDlat("")
                   setDlng("")
-                  navigation.navigate("Searching")
+                  navigation.navigate("Searching",{idAvoid: trip_id_})
                }} 
                >Decline Trip and Search again
             </Button>
