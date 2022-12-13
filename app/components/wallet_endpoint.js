@@ -65,7 +65,6 @@ const walletBalance = async (p_key) => {
         //console.log(`${WALLETURL}/balance/${p_key}`)    
     
         const response =await axios.get( `${WALLETURL}/balance/${p_key}`)
-        console.log(response.data)
         return response.data;
     // {
     //     client_id: id,

@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, StyleSheet,SafeAreaView, StatusBar, ScrollView,Image, Dimensions } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, StatusBar, ScrollView,Image, Dimensions,Alert } from 'react-native';
 import {Button} from 'react-native-paper'
 import {GOOGLE_API_KEY} from '@env'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -11,9 +11,33 @@ import MapViewDirections from 'react-native-maps-directions';
 import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
 import {price_trip, create_trip} from "../components/trip_api_endpoint"
-import { deposit } from '../components/wallet_endpoint';
+import {SaveCurrentTrip, getCurrentTrip_} from "../components/lastTrip"
+import { deposit, walletBalance } from '../components/wallet_endpoint';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function Ejemplo ({navigation}) {
+////////////////////////////////////////
+
+const [balance,setbalance] = React.useState("");
+
+const getProfile = async () => {  
+   const jsonValue = await AsyncStorage.getItem('userprofile');
+   const userProfile =  JSON.parse(jsonValue);  
+   return userProfile;
+}
+
+
+
+const  getBalanceUser = async() => {
+ getProfile().then(async(keyValue) => {
+   await walletBalance(keyValue.WalletAdress).then((response) =>{
+      var local = (Number(response) <= (price_/1000))
+      return local
+   })
+   })
+ }
+//////////////////////////////////////
    var trip_id_=null;
    const context = currentSession()
    const mapRef = React.createRef();
@@ -102,6 +126,7 @@ export default function Ejemplo ({navigation}) {
          setPrice(0)
          setDistance(0)
          setPriceReady(false)
+         //getBalanceUser()
          return () => {
          //   alert('Screen was unfocused');
             setFocus(false)
@@ -146,23 +171,20 @@ export default function Ejemplo ({navigation}) {
       await create_trip(context.uid, price_, origin.latitude, origin.longitude, destiny.latitude, destiny.longitude).then((result)=>{
         trip_id_ = (result.trip_id).toString();
         console.log(trip_id_);
-        if (trip_id_ ==="An error occurred"){
-          alerts("Trip Creado", "Usuario "+context.uid+" ya tiene un viaje en espera.");
+        if (trip_id_ ==="User have other trips waiting or in progress"){
+          alerts("Create Trip", "User: "+context.uid+" have other trips waiting or in progress");
           console.log(context.uid, "ya creo un trip.")
           trip_id_=null;
         }
         else{
           console.log("Esperando viaje, trip:", trip_id_);
         }
-        
-          
       })
-      
     }
 
    const build_trip = async() => {
-      await query_create_trip(price_).then(()=>{
-           if (trip_id_ === null){
+      await query_create_trip(price_).then(async ()=>{
+           if (trip_id_ == null ){
              setis(true);
              setOIS(false);
              setDIS(false);
@@ -170,9 +192,16 @@ export default function Ejemplo ({navigation}) {
              setPrice(0)
              setDistance(0)
              setPriceReady(false)
+             const current = await getCurrentTrip_()
+             navigation.navigate("Searching",{
+               id: current.id, Olat: current.Olat ,Olng: current.Olng,
+               Dlat: current.Dlat, Dlng: current.Dlng, price: current.price
+             })
 
            }
            else {
+            SaveCurrentTrip(trip_id_, origin.latitude, origin.longitude,
+               destiny.latitude, destiny.longitude, price_)
              navigation.navigate("Searching",{
                id: trip_id_,Olat: origin.latitude ,Olng: origin.longitude,
                 Dlat: destiny.latitude, Dlng: destiny.longitude, price: price_})
@@ -305,20 +334,6 @@ export default function Ejemplo ({navigation}) {
                >Confirm
             </Button>
          </View>
-         <View style={styles.button_container}>
-            <Button
-               style ={styles.button}
-               icon="car-sports"  
-               mode={"contained"}
-               buttonColor="green"
-               onPress= {async()=> {
-                 await deposit(0.001)
-                  // await build_trip()
-               }} 
-               >deposit
-            </Button>
-         </View>
-
 
          </React.Fragment>
       )            
@@ -384,7 +399,24 @@ export default function Ejemplo ({navigation}) {
                         mode={"contained"}
                         buttonColor="green"
                         onPress= {async()=> {
-                           await build_trip()
+                           //VEo si tiene el dinero para el viaje
+                           //console.log(balance, (price_/1000))
+                           const  response = await getBalanceUser()
+                           if (response){
+                              //Number(balance) <= (price_/1000)){
+                                 setis(true);
+                                 setOIS(false);
+                                 setDIS(false);
+                                 setnext(false);
+                                 setPrice(0)
+                                 setDistance(0)
+                                 setPriceReady(false)
+                                 Alert.alert("Trip Canceled"
+                                 ,"You don't have enough money in your wallet for the trip")
+                              }
+                              else {
+                                 await build_trip()
+                              }
                            //   navigation.navigate("Search Screen")
                         }} 
                         >Search Driver

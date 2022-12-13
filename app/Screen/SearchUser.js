@@ -103,11 +103,9 @@ const getBalanceUser = () => {
             </Card.Actions>
           
           <Card.Title title="Details"  left={LeftContent}
-            right={(props) => <IconButton {...props} icon="information" onPress={() => {}} />}
+//            right={(props) => <IconButton {...props} icon="information" onPress={() => {}} />}
             />
           <Card.Content>
-            {/* <Paragraph style={styles.text}>Address:</Paragraph>
-            <Paragraph style={styles.textData}> {!show ?"*******" : walletAddress}</Paragraph> */}
             <Paragraph style={styles.text}>PrivateKey:</Paragraph>
             <Paragraph style={styles.textData}> {!show ?"*******" : privateKey}</Paragraph>
             <Paragraph style={styles.text}></Paragraph>

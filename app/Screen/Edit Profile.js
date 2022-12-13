@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { StyleSheet, Dimensions, View, ScrollView, Text, Image} from 'react-native';
+import { StyleSheet, Dimensions, View, ScrollView, Image} from 'react-native';
 import {FormBuilder} from 'react-native-paper-form-builder';
 import {useForm} from 'react-hook-form';
 import {Button} from 'react-native-paper'
@@ -14,116 +14,11 @@ import uuid from 'uuid';
 import {currentSession} from '../context'
 
 
-
 function Edit_Profile ({navigation})  {
   const context = currentSession();
 
-  const [uploading, setState] = useState(false);
   const [image, setImage] = useState(null);
-  // progress
-  const [percent, setPercent] = useState(0);
- 
-//   const pickImage = async () => {
-//     // No permissions request is necessary for launching the image library
-//     let result = await ImagePicker.launchImageLibraryAsync({
-//       mediaTypes: ImagePicker.MediaTypeOptions.All,
-//       allowsEditing: true,
-//       aspect: [4, 4],
-//       quality: 1,
-//     });
-
-//     console.log(result);
-
-//     //if (!result.canceled) {
-//       setImage(result.uri);
-//     //}
-
-//     //////////////////////////////////////////////////////
-//     //////////////////////////////////////////////////////
-
-    
-//     //_handleImagePicked(result);
-
-//      const storageRef = ref(storage, "data/user/");
-
-//     // progress can be paused and resumed. It also exposes progress updates.
-//     // // Receives the storage reference and the file to upload.
-//      const uploadTask = uploadBytesResumable(storageRef, result);
-
-//     uploadTask.on(
-//         "state_changed",
-//         (snapshot) => {
-//             const percent = Math.round(
-//                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-//             );
-
-//             // update progress
-//             setPercent(percent);
-//         },
-//         (err) => console.log(err),
-//         () => {
-//             // download url
-//             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-//                 console.log(url);
-//             });
-//         }
-//     );
-//   };
-
-//   const _handleImagePicked = async (pickerResult) => {
-//     try {
-//       setState(true );
-
-//       if (!pickerResult.cancelled) {
-//         const uploadUrl = await uploadImageAsync(pickerResult.uri);
-//         setState(uploadUrl );
-//       }
-//     } catch (e) {
-//       console.log(e);
-//       alert('Upload failed, sorry :(');
-//     } finally {
-//       setState(false );
-//     }
-//   };
-
-
-// async function uploadImageAsync(uri) {
-//   // Why are we using XMLHttpRequest? See:
-//   // https://github.com/expo/expo/issues/2402#issuecomment-443726662
-//   const blob = await new Promise((resolve, reject) => {
-//     console.log('1')
-//     const xhr = new XMLHttpRequest();
-//     console.log('2')
-//     xhr.onload = function() {
-//       resolve(xhr.response);
-//     };
-//     console.log('3')
-//     xhr.onerror = function(e) {
-//       console.log(e);
-//       reject(new TypeError('Network request failed'));
-//     };
-//     console.log('4')
-//     xhr.responseType = 'blob';
-//     xhr.open('GET', uri, true);
-//     xhr.send(null);
-//     console.log('5')
-
-//   });
-//   console.log('1')
-//   const ref = storage.ref().child(uuid.v4());
-//     console.log('12')
-//   const snapshot = await ref.put(blob);
-
-//   // We're done with the blob, close and release it
-//   blob.close();
-
-//   return await snapshot.ref.getDownloadURL();
-// }
-// ////////////////////////////////////////////////////////////////
-// ////////////////////////////////////////////////////////////////
-
-
-
+  
    const update_ = () => {
 
    }
@@ -152,8 +47,8 @@ function Edit_Profile ({navigation})  {
       React.useCallback(() => {
    //      alert('Screen was focused');
             getProfile().then((keyValue) => {
-               console.log("custom",keyValue.name)
             });
+            console.log(context.uid)
    
             return () => {
             //   alert('Screen was unfocused');
@@ -162,13 +57,13 @@ function Edit_Profile ({navigation})  {
       );
 
    const update = (name_, lastname_) => {
-      var name, lastName, email, city, country, WalletAdress, WalletPrivateKey;
+      var Pic, name, lastName, email, city, country, WalletAdress, WalletPrivateKey;
       email = profile.email;
       city = profile.city;
       country = profile.country;
       WalletAdress= profile.WalletAdress;
       WalletPrivateKey = profile.WalletPrivateKey;
-
+      Pic = profile.idPic;
       getProfile().then(async(keyValue) => {
          if (name_==''){
             name = profile.name;
@@ -183,58 +78,17 @@ function Edit_Profile ({navigation})  {
             lastName = lastname_
          }
          
-         data_update({name:name, lastname:lastName, email:email, 
-                      address:WalletAdress, id: context.uid, 
-                      rol: context.passenger ? "passenger" : "driver"});
+         data_update({name:name, lastname:lastName, 
+                      id: context.uid, 
+                      rol: context.passenger ? "passenger" : "driver",
+                      idProfile: Number(Pic)});
 
          AsyncStorage.setItem('userprofile', JSON.stringify({'name': name, 'lastName': lastName, 'email': email,
-          'city': 'Buenos Aires', 'country': 'Argentina', 'WalletAdress': WalletAdress, 'WalletPrivateKey': WalletPrivateKey}));     
+          'city': 'Buenos Aires', 'country': 'Argentina', 'WalletAdress': WalletAdress, 'WalletPrivateKey': WalletPrivateKey,
+          'idPic': Pic}));     
          
       });
    }
-//     // State to store uploaded file
-//     const [file, setFile] = useState("");
- 
-
- 
-//     // Handle file upload event and update state
-//     function handleChange(event) {
-//         setFile(event.target.files[0]);
-//     }
-
-
-//    const handleUpload = () => {
-//     if (!file) {
-//         alert("Please upload an image first!");
-//     }
-
-//     const storageRef = ref(storage, `/files/${file.name}`);
-
-//     // progress can be paused and resumed. It also exposes progress updates.
-//     // Receives the storage reference and the file to upload.
-//     const uploadTask = uploadBytesResumable(storageRef, file);
-
-//     uploadTask.on(
-//         "state_changed",
-//         (snapshot) => {
-//             const percent = Math.round(
-//                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-//             );
-
-//             // update progress
-//             setPercent(percent);
-//         },
-//         (err) => console.log(err),
-//         () => {
-//             // download url
-//             getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-//                 console.log(url);
-//             });
-//         }
-//     );
-// };
-
-
 
     return (
       <View style={styles.containerStyle}>
@@ -249,7 +103,11 @@ function Edit_Profile ({navigation})  {
         <View style={styles.loginHeader}>
               <Image source={FIFIUBA} style={styles.image} />
         </View>
-        <View>
+        <View style={{
+          //backgroundColor:"red",
+          marginTop:Dimensions.get('window').height/10,
+          height: Dimensions.get('window').height/5
+        }}>
           <FormBuilder
             control={control}
             setFocus={setFocus}
@@ -293,23 +151,21 @@ function Edit_Profile ({navigation})  {
           </Button>
           </View>
           <View
-          style={styles.button_container}>
+            style={styles.button_container}>
           <Button
             style ={styles.button}
             labelStyle={{
               fontSize:Dimensions.get('window').width* 0.03,
             }}
             mode={'contained'}
+            onPress={handleSubmit((data) => {             
+              navigation.navigate('Profile Image')
+             }
+            )}
             >
-            photo
+            Change Picture
           </Button>
           </View>
-          {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
-          {/* <View>
-            <Text>
-              {percent} "% done"
-            </Text>
-          </View> */}
         </ScrollView>
       </View>
     );
@@ -340,12 +196,13 @@ function Edit_Profile ({navigation})  {
       resizeMethod: 'resize',
     },
     button: {
-      width:"40%",
-      height: Dimensions.get('window').height * 0.05,
+      width:"50%",
+      height: Dimensions.get('window').height * 0.06,
       alignItems: 'center',
       justifyContent: 'center',
     },
     button_container: {
+        margin:Dimensions.get('window').height/60,
        // width: Dimensions.get('window').width,  
        // height: (Dimensions.get('window').height)/5,
         alignItems: 'center',

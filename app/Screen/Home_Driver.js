@@ -68,11 +68,11 @@ function Home_Driver({navigation}){
                   icon="car-sports"  
                   mode={"contained"}
                   buttonColor="green"
-                  onPress= {()=> {navigation.navigate("Searching") }} 
+                  onPress= {()=> {navigation.navigate("Searching", {idAvoid: -1}) }} 
                   >Search trip
                </Button>
             </View>
-            <View style={styles.button_container}> 
+            {/* <View style={styles.button_container}> 
                <Button
                   style ={styles.button}
                   icon="car-sports"  
@@ -80,7 +80,7 @@ function Home_Driver({navigation}){
                   onPress= {()=> {deposit(0.01) }} 
                   >deposit
                </Button>
-            </View>
+            </View> */}
 
       </SafeAreaView>
     );

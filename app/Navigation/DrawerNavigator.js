@@ -13,6 +13,8 @@ import CustomDrawer from './CustomDrawer';
 import  Route_Map from '../Screen/Waiting/Route_map'
 import Edit_Profile from '../Screen/Edit Profile';
 import Trip_Found from '../Screen/Waiting/trip found'
+import { Score} from '../Screen/Score'
+import { ProfileImage} from '../Screen/ProfileImage'
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import {GoTo} from '../components/Noficationfunctions'
 import { useFocusEffect } from '@react-navigation/native';
@@ -166,6 +168,8 @@ const getProfile = async () => {
                         drawerItemStyle: {
                             display: "none",
                         },
+                        unmountOnBlur: true,
+
                     }}/>
                 <Drawer.Screen 
                     name = "MyTrips"
@@ -206,15 +210,19 @@ const getProfile = async () => {
                         drawerItemStyle: {
                             display: 'none',
                         },
+                        unmountOnBlur: true,
+
                     }}/>
 
                 <Drawer.Screen 
                     name = "Route Map" 
                     component={Route_Map}
                     options={{
+                        
                         drawerItemStyle: {
                             display: 'none',
                         },headerShown: false,
+                        unmountOnBlur: true,
                     }}/>
                 <Drawer.Screen 
                     name = "Edit Profile"  
@@ -223,6 +231,8 @@ const getProfile = async () => {
                         drawerItemStyle: {
                             display: 'none',
                         }, 
+                        unmountOnBlur: true,
+
                     }}/>         
                 <Drawer.Screen 
                     name = "Trip_Found"  
@@ -232,8 +242,29 @@ const getProfile = async () => {
                             display: 'none',
                         },
                         title: 'Trip found'
-                    }}/>                   
-
+                    }}/>       
+                <Drawer.Screen 
+                    name = "Rating"  
+                    component={Score}
+                    options={{
+                        drawerItemStyle: {
+                            display: 'none',
+                        },
+                        title: 'Rate User',
+                        unmountOnBlur: true,
+                        headerShown: false,
+                    }}/>                
+                <Drawer.Screen 
+                    name = "Profile Image"  
+                    component={ProfileImage}
+                    options={{
+                        drawerItemStyle: {
+                            display: 'none',
+                        },
+                        title: 'Choose an icon',
+                        unmountOnBlur: true,
+                        headerShown: false,
+                    }}/>    
             </Drawer.Navigator>
         
       );

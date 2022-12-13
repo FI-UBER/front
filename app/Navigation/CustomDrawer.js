@@ -11,6 +11,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const CustomDrawer = (props) => {
    const context = currentSession();
+   const [uri, setURI]= React.useState(0)
+   var randomImages = [
+      require('../assets/profilepic.jpg'),
+      require('../assets/user1.png'),
+      require('../assets/user2.png'),
+      require('../assets/user3.png'),
+      require('../assets/user4.png'),
+   ]
 
    const [profile,setprofile] = React.useState("");
 
@@ -29,8 +37,9 @@ const CustomDrawer = (props) => {
    React.useCallback(() => {
 //      alert('Screen was focused');
          getProfile().then((keyValue) => {
-            console.log("custom",keyValue.name)
+            setURI(Number(keyValue.idPic))
          });
+
 
          return () => {
          //   alert('Screen was unfocused');
@@ -40,7 +49,7 @@ const CustomDrawer = (props) => {
 
    useEffect(() => {  
       getProfile().then((keyValue) => {
-          //nothing
+          setURI(Number(keyValue.idPic))
    });
 
   },[setprofile, profile]);
@@ -53,7 +62,7 @@ const CustomDrawer = (props) => {
             source={require('../assets/background.png')}
             style={{padding: 20}}>
             <Image
-            source={require('../assets/profilepic.jpg')}
+            source={randomImages[uri]}
             style={styles.avatar}
             onPress={() => {
                console.log('Press')

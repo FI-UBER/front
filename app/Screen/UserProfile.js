@@ -14,6 +14,8 @@ import {
 import profilepic from '../assets/profilepic.jpg'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import { getScoreUser } from '../components/trip_api_endpoint';
+import { currentSession } from '../context';
 
 //Stars
 import StarCorner from '../assets/star_corner.png'
@@ -24,6 +26,16 @@ import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 
 function UserProfile ( {navigation} ) {
+    const context = currentSession();
+
+    const [uri, setURI]= React.useState(0)
+    var randomImages = [
+        require('../assets/profilepic.jpg'),
+        require('../assets/user1.png'),
+        require('../assets/user2.png'),
+        require('../assets/user3.png'),
+        require('../assets/user4.png'),
+     ]
 
     const [profile,setprofile] = React.useState("");
 
@@ -35,8 +47,8 @@ function UserProfile ( {navigation} ) {
         return (
             <View style = {styles.customBar}>
                 {
-                    maxStar.map((item,index) => {
-                        key={index}
+                    maxStar.map((item,key) => {
+                        key={item}
                         return (
                             
                             <Image style={styles.StarImage}
@@ -62,7 +74,16 @@ function UserProfile ( {navigation} ) {
             setprofile(userProfile);
         }
         return userProfile;
+    }
 
+    const getScore = async () => {  
+        const {score} = await getScoreUser(context.uid);  
+        if (score == null) {
+            setStar(0);
+        }
+        else {
+            setStar(score)
+        }
     }
 
     //Hook
@@ -71,8 +92,9 @@ function UserProfile ( {navigation} ) {
     //      alert('Screen was focused');
             getProfile().then((keyValue) => {
                 //nothing
-                
+                setURI(Number(keyValue.idPic));
              });
+             getScore()
 
             return () => {
             //   alert('Screen was unfocused');
@@ -83,7 +105,7 @@ function UserProfile ( {navigation} ) {
 
         useEffect(() => {  
             getProfile().then((keyValue) => {
-                //nothing
+                setURI(Number(keyValue.idPic));
          });
       
         },[setprofile, profile]);
@@ -100,7 +122,7 @@ function UserProfile ( {navigation} ) {
                         onPress={() => navigation.navigate('Edit Profile')}
                         style={({ pressed }) => ({ backgroundColor: pressed ? '#ddd' : '#0f0' })}>
                         <Image style={styles.avatar}
-                            source={profilepic}/>
+                            source={randomImages[uri]}/>
                     </TouchableHighlight>
 
                     <Text style={styles.name}>{profile.name} {profile.lastName}</Text>
