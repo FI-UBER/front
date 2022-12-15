@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "my-app",
+    "name": "fiuber-app",
     "slug": "my-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icon-fiuber.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/poweron.png",
@@ -27,7 +27,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon-fiuber-desktop.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.cristian2603.myapp"

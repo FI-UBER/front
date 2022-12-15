@@ -1,5 +1,5 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, StyleSheet,SafeAreaView, StatusBar, ScrollView,Image, Dimensions,Alert } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, ScrollView,Image, Dimensions,Alert, ImageBackground } from 'react-native';
 import {Button} from 'react-native-paper'
 import {GOOGLE_API_KEY} from '@env'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -65,7 +65,7 @@ const  getBalanceUser = async() => {
       //-34.60738448397424, 
       longitude: null,
       // -58.37032071534236,
-      name:null,
+      name:'',
     });
 
    //  useEffect(() => {
@@ -134,8 +134,8 @@ const  getBalanceUser = async() => {
       }, [])
       );
     
-    const LatLngOrigin = (lat, long) =>{
-      setOrigin({...origin,latitude: lat, longitude: long})
+    const LatLngOrigin = (lat, long, _name) =>{
+      setOrigin({...origin,latitude: lat, longitude: long, name: _name})
     }
     
       //Destino,
@@ -145,12 +145,12 @@ const  getBalanceUser = async() => {
      // -34.617639,
       longitude: null,
      // -58.368056,
-      name:'FIUBA',
+      name:'',
     });
 
 
-   const LatLngDestiny = (lat, long) =>{
-      setDestiny({...destiny,latitude: lat, longitude: long})
+   const LatLngDestiny = (lat, long, _name) =>{
+      setDestiny({...destiny,latitude: lat, longitude: long, name: _name})
     }
 
 //llamadas a api de viajes
@@ -168,7 +168,7 @@ const  getBalanceUser = async() => {
    }
 
    const query_create_trip = async(price_)=>{
-      await create_trip(context.uid, price_, origin.latitude, origin.longitude, destiny.latitude, destiny.longitude).then((result)=>{
+      await create_trip(context.uid, price_, origin.latitude, origin.longitude, destiny.latitude, destiny.longitude, origin.name, destiny.name).then((result)=>{
         trip_id_ = (result.trip_id).toString();
         console.log(trip_id_);
         if (trip_id_ ==="User have other trips waiting or in progress"){
@@ -200,8 +200,8 @@ const  getBalanceUser = async() => {
 
            }
            else {
-            SaveCurrentTrip(trip_id_, origin.latitude, origin.longitude,
-               destiny.latitude, destiny.longitude, price_)
+             SaveCurrentTrip(trip_id_, origin.latitude, origin.longitude,
+                destiny.latitude, destiny.longitude, price_)
              navigation.navigate("Searching",{
                id: trip_id_,Olat: origin.latitude ,Olng: origin.longitude,
                 Dlat: destiny.latitude, Dlng: destiny.longitude, price: price_})
@@ -221,7 +221,8 @@ const  getBalanceUser = async() => {
                   language: 'es'}}
                fetchDetails={true}
                onPress={(data, details = null) => {
-                  LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng);
+                  console.log(details.name); 
+                  LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng), details.name;
                   setOIS(true);
                }}
                onFail={error => console.log(error)}
@@ -254,11 +255,11 @@ const  getBalanceUser = async() => {
                   height:"100%",
                   marginLeft:20,
                   marginRight:20,
-                  justifyContent:'center'
+                  justifyContent:'center',
                },
                description: {
                   color: '#000',
-                  fontSize: 16,
+                  fontSize: 14,
 
                },
                predefinedPlacesDescription: {
@@ -268,6 +269,7 @@ const  getBalanceUser = async() => {
             }
             />
          </View>
+
          <View style={ styles.google}>
             <GooglePlacesAutocomplete
                placeholder="Trip Destination"
@@ -276,7 +278,7 @@ const  getBalanceUser = async() => {
                language: 'es'}}
                fetchDetails={true}
                onPress={(data, details = null) => {
-                  LatLngDestiny(details.geometry.location.lat, details.geometry.location.lng);
+                  LatLngDestiny(details.geometry.location.lat, details.geometry.location.lng, details.name);
                   setDIS(true);
                }}
                onFail={error => console.log(error)}
@@ -303,7 +305,7 @@ const  getBalanceUser = async() => {
                      borderTopLeftRadius: 20,
                   },
                   container: {
-                     justifyContent: 'flex-start',
+                     justifyContent: 'center',
                      flex: 0,
                      width:"80%",
                      height:"100%",
@@ -312,7 +314,7 @@ const  getBalanceUser = async() => {
                   },
                   description: {
                      color: '#000',
-                     fontSize: 16,
+                     fontSize: 14,
    
                   },
                   predefinedPlacesDescription: {
@@ -461,10 +463,12 @@ const  getBalanceUser = async() => {
             }}>
             <Image source={FIFIUBA} style={styles.image} />
          </View>
+         <ImageBackground source={require("../assets/cache.png")} style={styles.image_} >
+         
          {
             is && type_data()
          }
-
+         </ImageBackground>
          {
              next && map() 
          }
@@ -492,19 +496,24 @@ const styles = StyleSheet.create({
        button_container: {
            flex:1,  
            alignItems: 'center',
-           alignContent: 'center',
-           justifyContent: 'center',
-        //   backgroundColor:'blue',
+           alignContent: 'flex-end',
+           justifyContent: 'flex-end',
+         //  backgroundColor:'blue',
        },
        google:{
-         height: Dimensions.get('window').height/4,
+         height: Dimensions.get('window').height/4.5,
          alignItems: 'center',
-     //    backgroundColor: 'red',
+         //backgroundColor: 'red'
        },
        image:{
          marginRight:10,
          width: Dimensions.get('window').width/1.7,
          height: Dimensions.get('window').height/3.5,
+         resizeMethod: 'resize',
+       },
+       image_:{
+         width: Dimensions.get('window').width,
+         height: Dimensions.get('window').height/2,
          resizeMethod: 'resize',
        },
        text_d:{

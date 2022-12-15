@@ -56,7 +56,7 @@ export const ProfileImage = ({route,navigation}) => {
          data_update({name:name, lastname:lastName, 
                       id: context.uid, 
                       rol: context.passenger ? "passenger" : "driver",
-                     idProfile: Number(Pic)});
+                     idProfile: Pic.toString()});
 
          console.log(idPic)
          AsyncStorage.setItem('userprofile', JSON.stringify({'name': name, 'lastName': lastName, 'email': email,

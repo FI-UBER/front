@@ -178,6 +178,8 @@ const getProfile = async () => {
                         drawerItemStyle: {
                             display: "none",
                         },
+                        title: 'History',
+                        unmountOnBlur: true,
                     }}/>
                 <Drawer.Screen 
                     name = "MyConversations"
