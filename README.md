@@ -1,5 +1,7 @@
 # front
 
+Repositorio de la app movile del TP de Taller de Programacion 2.
+
 ## app
 
 ### Instalar
@@ -104,6 +106,8 @@ En front/app
 - yarn add expo
 
 - expo doctor --fix-dependencies
+
+- npm install 
 
 - expo start
 
