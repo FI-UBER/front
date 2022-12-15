@@ -7,21 +7,11 @@ import FIFIUBA from '../assets/car1.gif'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { data_update } from '../components/user_ap_endpoint';
-import {app, storage} from '../firebase'
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import * as ImagePicker from 'expo-image-picker';
-import uuid from 'uuid';
 import {currentSession} from '../context'
 
 
 function Edit_Profile ({navigation})  {
   const context = currentSession();
-
-  const [image, setImage] = useState(null);
-  
-   const update_ = () => {
-
-   }
 
    const [profile,setprofile] = React.useState("");
    const {control, setFocus, handleSubmit,reset} = useForm({
@@ -81,7 +71,7 @@ function Edit_Profile ({navigation})  {
          data_update({name:name, lastname:lastName, 
                       id: context.uid, 
                       rol: context.passenger ? "passenger" : "driver",
-                      idProfile: Number(Pic)});
+                      idProfile: Pic.toString()});
 
          AsyncStorage.setItem('userprofile', JSON.stringify({'name': name, 'lastName': lastName, 'email': email,
           'city': 'Buenos Aires', 'country': 'Argentina', 'WalletAdress': WalletAdress, 'WalletPrivateKey': WalletPrivateKey,

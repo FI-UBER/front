@@ -7,7 +7,7 @@ import WAITING from '../../assets/waiting.gif'
 import {currentSession} from '../../context'
 import {Button} from 'react-native-paper'
 import { deposit } from '../../components/wallet_endpoint';
-import { search_trip, accept_driver, client_has_a_driver } from '../../components/trip_api_endpoint';
+import { search_trip, accept_driver, client_has_a_driver, cancelTrip } from '../../components/trip_api_endpoint';
 import {schedulePushNotification} from '../../components/Noficationfunctions';
 var bool= false;
 var buclefunction=null;
@@ -64,6 +64,8 @@ function Waiting({navigation}) {
     
     if(context.passenger){
       console.log("Trip",id_ ,"cancelado")
+      cancelSearch(id_)
+      
     }
     else{
       console.log("Busqueda de viaje cancelado")

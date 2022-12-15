@@ -17,10 +17,11 @@ const price_trip = async (distance) => {
     }
 }
 
-const create_trip = async (id,price,Olat,Olng,Dlat,Dlng) => {
+const create_trip = async (id,price,Olat,Olng,Dlat,Dlng,Oname, Dname) => {
     try {  
         const response =await axios.post
-        ( `${TRIPS_URL}/accept-client-trip?client_id=${id}&price=${price}&user_lat=${Olat}&user_long=${Olng}&dest_lat=${Dlat}&dest_long=${Dlng}` )
+        ( `${TRIPS_URL}/accept-client-trip?client_id=${id}&price=${price}&user_lat=${Olat}&user_long=${Olng}&dest_lat=${Dlat}
+        &dest_long=${Dlng}&starting_name=${Oname}&destination_name=${Dname}` )
         return response.data;
     } catch (error) {
         const message = (error.response?.data?.error
@@ -88,7 +89,6 @@ const get_driver_pos = async (trip_id) => {
 }
 
 const update_driver_pos = async (trip_id,new_lat, new_lng) => {
- //   console.log("endpoint:",trip_id, new_lat, new_lng)
     try {  
         const response =await axios.put( `${TRIPS_URL}/driver/position?trip_id=${trip_id}&driver_lat=${new_lat}&driver_long=${new_lng}`)
         return response.data;
@@ -154,10 +154,39 @@ const getScoreUser = async (userId) => {
     }
 }
 
-///trip/{trip_id}/qualify/{user_id}/score/{score}
 const ScoreAUser = async (user_id, trip_id, score) => {
     try {  
         const response =await axios.post( `${TRIPS_URL}/trip/${trip_id}/qualify/${user_id}/score/${score}`)
+        return response.data;
+    } catch (error) {
+        const message = (error.response?.data?.error
+             || error.message)
+            //|| 'Error')
+        //console.error(message);
+        throw new Error(message)
+    }
+}
+
+
+//trip/canceled/{trip_id}
+const cancelTrip = async (trip_id) => {
+    try {  
+        const response =await axios.post( `${TRIPS_URL}trip/canceled/${trip_id}`)
+        return response.data;
+    } catch (error) {
+        const message = (error.response?.data?.error
+             || error.message)
+            //|| 'Error')
+        //console.error(message);
+        throw new Error(message)
+    }
+}
+///trips/history/{user_id}
+const userHistory = async (user_id) => {
+ //   console.log(`${TRIPS_URL}/trip/history/${user_id}`)
+    try {  
+        const response =await axios.get( `${TRIPS_URL}/trips/history/${user_id}`)
+     //   console.log(response.data)
         return response.data;
     } catch (error) {
         const message = (error.response?.data?.error
@@ -173,4 +202,4 @@ const ScoreAUser = async (user_id, trip_id, score) => {
 export {price_trip, create_trip, search_trip, accept_driver,
         client_has_a_driver, update_driver_pos, get_driver_pos, 
         get_status, update_status, finish_trip_, getScoreUser,
-        ScoreAUser};
+        ScoreAUser, cancelTrip, userHistory};
