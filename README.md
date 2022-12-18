@@ -114,3 +114,9 @@ En front/app
 Usar emulador de celular o la apliccion de expo para entrar a la app localmente
 
 - Se requiere tener nodejs instalado
+
+
+### Release 
+
+
+
