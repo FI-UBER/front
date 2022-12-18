@@ -29,7 +29,7 @@ function Login({navigation}){
     }
 
     const getDataUser = async(email_, typeUser) => {
-      await getData({email: email_, rol: typeUser}).then((data) =>{
+      await getData({email: email_}, typeUser).then((data) =>{
        // console.log(data);
         context.login(data._id)
         

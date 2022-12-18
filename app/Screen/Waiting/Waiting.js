@@ -64,7 +64,7 @@ function Waiting({navigation}) {
     
     if(context.passenger){
       console.log("Trip",id_ ,"cancelado")
-      cancelSearch(id_)
+      cancelTrip(id_)
       
     }
     else{
@@ -102,16 +102,22 @@ const Client_with_driver =async(id_trip)=>{
  const Driver_Search= async()=>{
   console.log("Busco cada 5 sec, soy chofer...");
   try {
-    console.log(tripAvoid)
-      const { trip_price, trip_id,lat, long, dest_lat, dest_long }  = await search_trip(tripAvoid);
-      setMsg("Foundit trip");
-      console.log("viaje con precio:",trip_price,"y trip_id:", trip_id);
-      const text ='Price of the trip :'+trip_price+'\n';
+      //console.log(tripAvoid)
+      const { trip_price, trip_id,lat, long, dest_lat, dest_long, status }  = await search_trip(tripAvoid);
       NoLoop();
-      schedulePushNotification("Foundit trip", text, "Route Map")
-      navigation.navigate("Trip_Found",{
-        id: trip_id, price: trip_price, Olat:lat, Olng:long, Dlat: dest_lat, Dlng: dest_long})
-    
+      if (status == "Failed: No trips available to do"){
+        setMsg("Searching Client...")
+        loopDriver()
+      }
+      else{
+        setMsg("Foundit trip");
+        console.log("viaje con precio:",trip_price,"y trip_id:", trip_id);
+        const text ='Price of the trip :'+trip_price+'\n';
+        
+        schedulePushNotification("Foundit trip", text, "Route Map")
+        navigation.navigate("Trip_Found",{
+          id: trip_id, price: trip_price, Olat:lat, Olng:long, Dlat: dest_lat, Dlng: dest_long})
+      }
   } catch (error) {
       console.log(error.message);
       setMsg(error.message);

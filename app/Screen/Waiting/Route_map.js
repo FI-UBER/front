@@ -1,9 +1,9 @@
 import {Text, View, StyleSheet, Dimensions,SafeAreaView,Image} from 'react-native';
 import React,{useEffect, useState} from 'react';
 import {Button} from 'react-native-paper'
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
-import {GOOGLE_API_KEY} from '@env'
+import {GOOGLE_API_KEYS} from '@env'
 import * as Location from 'expo-location';
 import { useFocusEffect, useRoute } from '@react-navigation/native';
 import { Fontisto } from '@expo/vector-icons';
@@ -289,7 +289,8 @@ function button_finish ()  {
         <Text style={styles.text}>{Msg_} </Text>
         </View>
         <View style={{flex:4}}>
-         <MapView style={styles.map} 
+         <MapView style={styles.map}
+          provider = {PROVIDER_GOOGLE} 
               ref={mapRef}
             //  showsUserLocation = {true}
               followsUserLocation={true}
@@ -323,7 +324,7 @@ function button_finish ()  {
                 //API KEY Requerido
                   origin={origin}
                   destination={destiny}
-                  apikey={GOOGLE_API_KEY}
+                  apikey={GOOGLE_API_KEYS}
                   strokeWidht={10}
                   strokeColor= 'black'
                   mode='DRIVING'
