@@ -118,5 +118,7 @@ Usar emulador de celular o la apliccion de expo para entrar a la app localmente
 
 ### Release 
 
+https://github.com/FI-UBER/front/blob/dev/fiuber).apk
+
 
 
