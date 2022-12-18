@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { userHistory } from '../components/trip_api_endpoint';
@@ -105,6 +106,8 @@ function MyTrips({navigation}) {
             <DataTable.Row
               key={theArray.id}
               onPress={() => {
+                var text = "Origin: "+theArray.origin+"\nDestination: "+theArray.destination
+                Alert.alert("Trip:"+theArray.id, text)
                 console.log(`selected account ${theArray.id}`)
               }}
             >

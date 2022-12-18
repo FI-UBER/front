@@ -1,5 +1,5 @@
 import axios from "axios";
-import { WALLETURL } from '@env'
+import { GATEWAY } from '@env'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const _getProfile = async () => {  
@@ -10,24 +10,24 @@ const _getProfile = async () => {
 
 const pay = async (monto) => {
     _getProfile().then((keyValue) => {
-        var credentials = JSON.stringify({privateKey: keyValue.WalletPrivateKey, amountInEthers: monto.toString()})   
+        var credentials = ({privateKey: keyValue.WalletPrivateKey, amountInEthers: monto.toString()})   
         _recivePayFromContract(credentials)     
      });
 }
 
 const deposit = async (monto) => {
     _getProfile().then((keyValue) => {
-        var credentials = JSON.stringify({privateKey: keyValue.WalletPrivateKey, amountInEthers: monto.toString()})   
+        var credentials = ({privateKey: keyValue.WalletPrivateKey, amountInEthers: monto.toString()})   
         console.log(credentials)
         _depositToContract(credentials)     
      });
 }
 
 const _depositToContract = async (data) => {
-
-        axios.post( `${WALLETURL}/deposit`, data,
-            {headers: {
-                'Content-Type' : 'application/json'}}
+        console.log( `${GATEWAY}/api/v1/deposit?privateKey=${data.privateKey}&amountInEthers=${data.amountInEthers}`)
+        axios.post( `${GATEWAY}/api/v1/deposit?privateKey=${data.privateKey}&amountInEthers=${data.amountInEthers}`
+            // {headers: {
+            //     'Content-Type' : 'application/json'}}
         )
         .then((response) =>{
             console.log(response.data)
@@ -44,9 +44,9 @@ const _depositToContract = async (data) => {
 
 const _recivePayFromContract = async (data) => {
 
-    axios.post( `${WALLETURL}/pay`, data,
-        {headers: {
-            'Content-Type' : 'application/json'}}
+    axios.post( `${GATEWAY}/api/v1/pay?privateKey=${data.privateKey}&amountInEthers=${data.amountInEthers}`
+        // {headers: {
+        //     'Content-Type' : 'application/json'}}
     )
     .then((response) =>{
         console.log(response.data)
@@ -62,9 +62,9 @@ const _recivePayFromContract = async (data) => {
 
 const walletBalance = async (p_key) => {
     // try {
-        //console.log(`${WALLETURL}/balance/${p_key}`)    
+        //console.log(`${GATEWAY}/balance/${p_key}`)    
     
-        const response =await axios.get( `${WALLETURL}/balance/${p_key}`)
+        const response =await axios.get( `${GATEWAY}/api/v1/balance/${p_key}`)
         return response.data;
     // {
     //     client_id: id,

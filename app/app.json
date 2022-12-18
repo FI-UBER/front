@@ -30,10 +30,15 @@
         "foregroundImage": "./assets/icon-fiuber-desktop.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.cristian2603.myapp"
+      "package": "com.cristian2603.myapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBE0fFm-8PvYNdJ4dcEVovbgx5fsZ5woiE"
+        }
+      }
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon-fiuber.png"
     },
     "plugins": [
       [

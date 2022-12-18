@@ -1,12 +1,12 @@
 import React, { Component, useState, useEffect } from 'react';
-import { View, Text, StyleSheet,SafeAreaView, ScrollView,Image, Dimensions,Alert, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet,SafeAreaView, Image, Dimensions,Alert, ImageBackground,ScrollView } from 'react-native';
 import {Button} from 'react-native-paper'
-import {GOOGLE_API_KEY} from '@env'
+import {GOOGLE_API_KEYS, MAP} from '@env'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import FIFIUBA from '../assets/car1.gif'
 import {alerts} from '../components/Alert'
 import * as Location from 'expo-location';
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE  } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { useFocusEffect } from '@react-navigation/native';
 import { currentSession } from '../context';
@@ -14,27 +14,51 @@ import {price_trip, create_trip} from "../components/trip_api_endpoint"
 import {SaveCurrentTrip, getCurrentTrip_} from "../components/lastTrip"
 import { deposit, walletBalance } from '../components/wallet_endpoint';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { async } from '@firebase/util';
+// import { ScrollView } from 'react-native-virtualized-view'
 
 
 export default function Ejemplo ({navigation}) {
 ////////////////////////////////////////
 
-const [balance,setbalance] = React.useState("");
+const [profile,setprofile] = React.useState("");
+var CantPay = false
+const [a, seta] = React.useState(false);
 
 const getProfile = async () => {  
    const jsonValue = await AsyncStorage.getItem('userprofile');
    const userProfile =  JSON.parse(jsonValue);  
-   return userProfile;
+   if (userProfile !== null) {
+      setprofile(userProfile);
+  }
+  console.log(userProfile)
+  return userProfile;
 }
 
 
 
-const  getBalanceUser = async() => {
- getProfile().then(async(keyValue) => {
-   await walletBalance(keyValue.WalletAdress).then((response) =>{
-      var local = (Number(response) <= (price_/1000))
-      return local
-   })
+const  getBalanceUser = (res) => {
+   walletBalance(profile.WalletPrivateKey).then(async(response) =>{
+      var local = (Number(response) <= Number(res))
+      CantPay = (Number(response) <= Number(res)/1000)
+      console.log("user",CantPay)
+      if (!CantPay){
+         //Number(balance) <= (price_/1000)){
+            setis(true);
+            setOIS(false);
+            setDIS(false);
+            setnext(false);
+            setPrice(0)
+            setDistance(0)
+            setPriceReady(false)
+            Alert.alert("Trip Canceled"
+            ,"You don't have enough money in your wallet for the trip")
+         }
+         else {
+            await build_trip()
+         }
+
+      //return local
    })
  }
 //////////////////////////////////////
@@ -82,6 +106,7 @@ const  getBalanceUser = async() => {
          console.log("Next")
         setnext(true)
         setis(false)
+        //getBalanceUser()
         
       }
     }
@@ -117,6 +142,10 @@ const  getBalanceUser = async() => {
       //Hook
       useFocusEffect(
       React.useCallback(() => {
+         getProfile().then((keyValue) => {
+            //nothing
+         });
+         
    //      alert('Screen was focused');
          setFocus(true);
          setis(true);
@@ -164,12 +193,13 @@ const  getBalanceUser = async() => {
       GetPrice().then(async(result) => {
          console.log("Precio del viaje", result)
          setPrice(result.toFixed(2))
+         //getBalanceUser(result)
        })   
    }
 
    const query_create_trip = async(price_)=>{
       await create_trip(context.uid, price_, origin.latitude, origin.longitude, destiny.latitude, destiny.longitude, origin.name, destiny.name).then((result)=>{
-        trip_id_ = (result.trip_id).toString();
+        trip_id_ = (result.trip_id);
         console.log(trip_id_);
         if (trip_id_ ==="User have other trips waiting or in progress"){
           alerts("Create Trip", "User: "+context.uid+" have other trips waiting or in progress");
@@ -213,16 +243,19 @@ const  getBalanceUser = async() => {
       function type_data() {
       return(
          <React.Fragment >
+            {/* <ScrollView horizontal={true} style={{flex: 1, width: '100%', height: '100%'}}> */}
+            <ImageBackground source={require("../assets/cache.png")} style={styles.image_} >
          <View style={styles.google}>
             <GooglePlacesAutocomplete
+            horizontal ={true}
                placeholder="Trip Origin"
                query={{
-                  key: GOOGLE_API_KEY,
+                  key: GOOGLE_API_KEYS,
                   language: 'es'}}
                fetchDetails={true}
                onPress={(data, details = null) => {
-                  console.log(details.name); 
-                  LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng), details.name;
+                  //console.log(details.name); 
+                  LatLngOrigin(details.geometry.location.lat, details.geometry.location.lng, details.name);
                   setOIS(true);
                }}
                onFail={error => console.log(error)}
@@ -252,14 +285,14 @@ const  getBalanceUser = async() => {
                container: {
                   flex: 0,
                   width:"80%",
-                  height:"100%",
+                  height:"60%",
                   marginLeft:20,
                   marginRight:20,
                   justifyContent:'center',
                },
                description: {
                   color: '#000',
-                  fontSize: 14,
+                  fontSize: 16,
 
                },
                predefinedPlacesDescription: {
@@ -272,12 +305,14 @@ const  getBalanceUser = async() => {
 
          <View style={ styles.google}>
             <GooglePlacesAutocomplete
+               horizontal ={true}
                placeholder="Trip Destination"
                query={{
-               key: GOOGLE_API_KEY,
+               key: GOOGLE_API_KEYS,
                language: 'es'}}
                fetchDetails={true}
                onPress={(data, details = null) => {
+                  //console.log(details.name)
                   LatLngDestiny(details.geometry.location.lat, details.geometry.location.lng, details.name);
                   setDIS(true);
                }}
@@ -308,13 +343,13 @@ const  getBalanceUser = async() => {
                      justifyContent: 'center',
                      flex: 0,
                      width:"80%",
-                     height:"100%",
+                     height:"60%",
                      marginLeft:20,
                      marginRight:20,
                   },
                   description: {
                      color: '#000',
-                     fontSize: 14,
+                     fontSize: 16,
    
                   },
                   predefinedPlacesDescription: {
@@ -336,7 +371,8 @@ const  getBalanceUser = async() => {
                >Confirm
             </Button>
          </View>
-
+         </ImageBackground>
+         {/* </ScrollView> */}
          </React.Fragment>
       )            
    }
@@ -344,7 +380,9 @@ const  getBalanceUser = async() => {
    function map(){
       return(
          <React.Fragment>
-         <MapView style={styles.map} 
+         <MapView style={styles.map}
+               provider={PROVIDER_GOOGLE} 
+               apikey={MAP}
               ref={mapRef}
              //t showsUserLocation = {true}
               followsUserLocation={true}
@@ -370,7 +408,7 @@ const  getBalanceUser = async() => {
                 //API KEY Requerido
                   origin={origin}
                   destination={destiny}
-                  apikey={GOOGLE_API_KEY}
+                  apikey={GOOGLE_API_KEYS}
                   strokeWidht={7}
                   str
                   strokeColor= 'black'
@@ -402,23 +440,28 @@ const  getBalanceUser = async() => {
                         buttonColor="green"
                         onPress= {async()=> {
                            //VEo si tiene el dinero para el viaje
-                           //console.log(balance, (price_/1000))
-                           const  response = await getBalanceUser()
-                           if (response){
-                              //Number(balance) <= (price_/1000)){
-                                 setis(true);
-                                 setOIS(false);
-                                 setDIS(false);
-                                 setnext(false);
-                                 setPrice(0)
-                                 setDistance(0)
-                                 setPriceReady(false)
-                                 Alert.alert("Trip Canceled"
-                                 ,"You don't have enough money in your wallet for the trip")
-                              }
-                              else {
-                                 await build_trip()
-                              }
+                           
+                           getBalanceUser(price_)
+                           
+                           // if (a == true){
+                           //    //Number(balance) <= (price_/1000)){
+                           //       setis(true);
+                           //       setOIS(false);
+                           //       setDIS(false);
+                           //       setnext(false);
+                           //       setPrice(0)
+                           //       setDistance(0)
+                           //       setPriceReady(false)
+                           //       Alert.alert("Trip Canceled"
+                           //       ,"You don't have enough money in your wallet for the trip")
+                           //    }
+                           //    else {
+                           //       await build_trip()
+                           //    }
+
+                          // })
+                         //  console.log(response)
+
                            //   navigation.navigate("Search Screen")
                         }} 
                         >Search Driver
@@ -447,28 +490,29 @@ const  getBalanceUser = async() => {
 
     return (
       <SafeAreaView style={styles.container}>
+
          <ScrollView
-      //horizontal={true}
+            horizontal={false}
             nestedScrollEnabled={true}
             keyboardShouldPersistTaps='always'
             contentContainerStyle={{ flexGrow: 1 }}
             style={{
             //  marginTop:150
             }}>
-         
-         <View style={{
+                           <View style={{
             alignItems:'center',
           //  backgroundColor:'red',
             height:Dimensions.get('window').height/3.5
             }}>
             <Image source={FIFIUBA} style={styles.image} />
          </View>
-         <ImageBackground source={require("../assets/cache.png")} style={styles.image_} >
+
+         {/* <ImageBackground source={require("../assets/cache.png")} style={styles.image_} > */}
          
          {
             is && type_data()
          }
-         </ImageBackground>
+         {/* </ImageBackground> */}
          {
              next && map() 
          }
@@ -496,8 +540,8 @@ const styles = StyleSheet.create({
        button_container: {
            flex:1,  
            alignItems: 'center',
-           alignContent: 'flex-end',
-           justifyContent: 'flex-end',
+           alignContent: 'center',
+           justifyContent: 'center',
          //  backgroundColor:'blue',
        },
        google:{
