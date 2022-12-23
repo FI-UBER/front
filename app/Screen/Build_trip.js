@@ -22,6 +22,7 @@ export default function Ejemplo ({navigation}) {
 ////////////////////////////////////////
 
 const [profile,setprofile] = React.useState("");
+const [bal,setbal] = React.useState("");
 var CantPay = false
 const [a, seta] = React.useState(false);
 
@@ -34,33 +35,36 @@ const getProfile = async () => {
   console.log(userProfile)
   return userProfile;
 }
+const getBalanceUser_ = () => {
+   getProfile().then(async(keyValue) => {
+     await walletBalance(profile.WalletAdress).then((response) =>{
+      console.log("balance: " + response)
+       setbal(response.toFixed(8))
+       })
+     })
+   }
 
 
+const  EvalBalanceUser = async(res) => {
+         CantPay = (Number(bal) <= Number(res/1000))
+         console.log("user",CantPay)
+         if (CantPay){
+            //Number(balance) <= (price_/1000)){
+               setis(true);
+               setOIS(false);
+               setDIS(false);
+               setnext(false);
+               setPrice(0)
+               setDistance(0)
+               setPriceReady(false)
+               Alert.alert("Trip Canceled"
+               ,"You don't have enough money in your wallet for the trip")
+            }
+            else {
+               await build_trip()
+            }
+}
 
-const  getBalanceUser = (res) => {
-   walletBalance(profile.WalletPrivateKey).then(async(response) =>{
-      var local = (Number(response) <= Number(res))
-      CantPay = (Number(response) <= Number(res)/1000)
-      console.log("user",CantPay)
-      if (!CantPay){
-         //Number(balance) <= (price_/1000)){
-            setis(true);
-            setOIS(false);
-            setDIS(false);
-            setnext(false);
-            setPrice(0)
-            setDistance(0)
-            setPriceReady(false)
-            Alert.alert("Trip Canceled"
-            ,"You don't have enough money in your wallet for the trip")
-         }
-         else {
-            await build_trip()
-         }
-
-      //return local
-   })
- }
 //////////////////////////////////////
    var trip_id_=null;
    const context = currentSession()
@@ -422,6 +426,7 @@ const  getBalanceUser = (res) => {
                     console.log("Distancia")
                     console.log(result.distance)
                     fitMapToOriginDestiny()
+                    getBalanceUser_()
                   }}>
                   
                 </MapViewDirections>
@@ -441,28 +446,8 @@ const  getBalanceUser = (res) => {
                         onPress= {async()=> {
                            //VEo si tiene el dinero para el viaje
                            
-                           getBalanceUser(price_)
-                           
-                           // if (a == true){
-                           //    //Number(balance) <= (price_/1000)){
-                           //       setis(true);
-                           //       setOIS(false);
-                           //       setDIS(false);
-                           //       setnext(false);
-                           //       setPrice(0)
-                           //       setDistance(0)
-                           //       setPriceReady(false)
-                           //       Alert.alert("Trip Canceled"
-                           //       ,"You don't have enough money in your wallet for the trip")
-                           //    }
-                           //    else {
-                           //       await build_trip()
-                           //    }
-
-                          // })
-                         //  console.log(response)
-
-                           //   navigation.navigate("Search Screen")
+                           EvalBalanceUser(price_)
+  
                         }} 
                         >Search Driver
                      </Button>
